@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -16,13 +16,13 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50:'#f0f4ff',100:'#dbe4ff',200:'#bac8ff',300:'#91a7ff',400:'#748ffc',500:'#5c7cfa',600:'#4c6ef5',700:'#4263eb',800:'#3b5bdb',900:'#364fc7' },
-            surface: { 50:'#fafbff',100:'#f1f3f5',200:'#e9ecef',300:'#dee2e6' },
-            ink: { 50:'#f8f9fa',100:'#ced4da',200:'#adb5bd',300:'#868e96',400:'#495057',500:'#343a40',600:'#212529' },
-            good: { 50:'#ebfbee',100:'#d3f9d8',600:'#2f9e44',700:'#2b8a3e' },
-            warn: { 600:'#f08c00',700:'#e67700' }
+            brand: { 50:'#faf5ff',100:'#f3e8ff',200:'#e9d5ff',300:'#d8b4fe',400:'#c084fc',500:'#a855f7',600:'#9333ea',700:'#7e22ce',800:'#6b21a8',900:'#581c87' },
+            surface: { 50:'#fafaff',100:'#f3f2f7',200:'#e8e6ef',300:'#d5d3de' },
+            ink: { 50:'#f8f7fa',100:'#cfcce0',200:'#a9a6b8',300:'#8682a0',400:'#5c5878',500:'#3d3a54',600:'#23203c' },
+            good: { 50:'#f0fdf4',100:'#dcfce7',600:'#16a34a',700:'#15803d' },
+            warn: { 600:'#eab308',700:'#ca8a04' }
           },
-          fontFamily: { sans:['Manrope','sans-serif'], display:['Space Grotesk','sans-serif'] }
+          fontFamily: { sans:['Plus Jakarta Sans','sans-serif'], display:['Space Grotesk','sans-serif'] }
         }
       }
     }
@@ -48,8 +48,7 @@
         document.getElementById('loadingScreen').classList.add('hidden');
         document.getElementById('app').classList.remove('hidden');
         document.getElementById('userEmail').textContent = user.email;
-        const initials = user.email.charAt(0).toUpperCase();
-        document.getElementById('userInitials').textContent = initials;
+        document.getElementById('userInitials').textContent = user.email.charAt(0).toUpperCase();
       } else {
         window.location.href = 'index.html';
       }
@@ -61,80 +60,98 @@
   </script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Manrope',sans-serif; background:#f6f5fb; }
-    .navitem.active { background:#f0f4ff; color:#4c6ef5; }
-    .navitem.active i { color:#4c6ef5; }
+    body { font-family:'Plus Jakarta Sans',sans-serif; background:#fafaff; }
+    .dark body, .dark { background:#1a1630; color:#e8e6ef; }
+    .navitem.active { background:#f3e8ff; color:#7e22ce; }
+    .navitem.active i { color:#9333ea; }
+    .dark .navitem.active { background:rgba(147,51,234,.15); color:#c084fc; }
     .screen { display:none; }
     .screen.active { display:block; }
-    .mnav { display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 0; font-size:10px; color:#868e96; cursor:pointer; position:relative; }
-    .mnav.active { color:#4c6ef5; }
-    .card { background:white; border:1px solid #e9ecef; border-radius:16px; }
-    .chip { display:inline-flex; align-items:center; gap:4px; padding:6px 12px; border-radius:10px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid #e9ecef; background:white; color:#495057; transition:all .2s; }
-    .chip.active { background:#4c6ef5; color:white; border-color:#4c6ef5; }
-    .pill { display:inline-flex; align-items:center; width:40px; height:22px; border-radius:11px; cursor:pointer; transition:background .2s; position:relative; }
-    .pill.off { background:#dee2e6; }
-    .pill.off::after { content:''; position:absolute; left:2px; top:2px; width:18px; height:18px; border-radius:50%; background:white; box-shadow:0 1px 3px rgba(0,0,0,.15); }
-    .pill.on { background:#4c6ef5; }
-    .pill.on::after { content:''; position:absolute; right:2px; top:2px; width:18px; height:18px; border-radius:50%; background:white; box-shadow:0 1px 3px rgba(0,0,0,.15); }
-    .sb-header:hover { background:#fafbff; }
-    .kpi-card { background:white; border:1px solid #e9ecef; border-radius:12px; padding:14px; }
-    .kpi-label { font-size:11px; color:#868e96; margin-bottom:4px; }
-    .kpi-value { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:#212529; }
-    .kpi-sub { font-size:10px; color:#868e96; margin-top:2px; }
+    .mnav { display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 0; font-size:10px; color:#8682a0; cursor:pointer; position:relative; }
+    .mnav.active { color:#9333ea; }
+    .card { background:white; border:1px solid #e8e6ef; border-radius:16px; }
+    .dark .card { background:#23203c; border-color:#3d3a54; }
+    .kpi-card { background:white; border:1px solid #e8e6ef; border-radius:14px; padding:16px; transition:all .2s; }
+    .kpi-card:hover { border-color:#d8b4fe; box-shadow:0 4px 20px -6px rgba(147,51,234,.15); }
+    .dark .kpi-card { background:#23203c; border-color:#3d3a54; }
+    .dark .kpi-card:hover { border-color:#7e22ce; }
+    .kpi-label { font-size:12px; color:#8682a0; margin-bottom:6px; font-weight:500; }
+    .kpi-value { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#23203c; }
+    .dark .kpi-value { color:#f3f2f7; }
+    .kpi-sub { font-size:11px; color:#a9a6b8; margin-top:3px; }
     table { border-collapse:collapse; width:100%; }
-    th { text-align:left; padding:10px 12px; font-size:11px; color:#868e96; text-transform:uppercase; letter-spacing:.5px; background:#fafbff; border-bottom:1px solid #e9ecef; font-weight:600; }
-    td { padding:10px 12px; font-size:13px; border-bottom:1px solid #f1f3f5; }
-    tr:hover td { background:#fafbff; }
-    .status-on { background:#ebfbee; color:#2b8a3e; padding:3px 10px; border-radius:8px; font-size:11px; font-weight:600; }
-    .status-off { background:#fff5f5; color:#c92a2a; padding:3px 10px; border-radius:8px; font-size:11px; font-weight:600; }
-    .status-pause { background:#fff9db; color:#e67700; padding:3px 10px; border-radius:8px; font-size:11px; font-weight:600; }
+    th { text-align:left; padding:10px 14px; font-size:11px; color:#8682a0; text-transform:uppercase; letter-spacing:.6px; background:#fafaff; border-bottom:1px solid #e8e6ef; font-weight:600; }
+    .dark th { background:#2d2a45; border-color:#3d3a54; color:#a9a6b8; }
+    td { padding:10px 14px; font-size:13px; border-bottom:1px solid #f3f2f7; }
+    .dark td { border-color:#3d3a54; }
+    tr:hover td { background:#faf5ff; }
+    .dark tr:hover td { background:rgba(147,51,234,.05); }
+    .status-on { background:#f0fdf4; color:#15803d; padding:4px 12px; border-radius:8px; font-size:11px; font-weight:600; }
+    .status-off { background:#fef2f2; color:#dc2626; padding:4px 12px; border-radius:8px; font-size:11px; font-weight:600; }
+    .status-pause { background:#fefce8; color:#ca8a04; padding:4px 12px; border-radius:8px; font-size:11px; font-weight:600; }
+    .chip { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #e8e6ef; background:white; color:#5c5878; transition:all .2s; }
+    .chip.active { background:#9333ea; color:white; border-color:#9333ea; }
+    .dark .chip { background:#2d2a45; border-color:#3d3a54; color:#a9a6b8; }
+    .dark .chip.active { background:#7e22ce; border-color:#7e22ce; color:white; }
+    .toggle-track { width:44px; height:24px; border-radius:12px; cursor:pointer; transition:background .3s; position:relative; }
+    .toggle-track.light { background:#e8e6ef; }
+    .toggle-track.dark-mode { background:#7e22ce; }
+    .toggle-thumb { width:20px; height:20px; border-radius:50%; background:white; position:absolute; top:2px; box-shadow:0 1px 4px rgba(0,0,0,.15); transition:transform .3s; }
+    .toggle-track.light .toggle-thumb { left:2px; }
+    .toggle-track.dark-mode .toggle-thumb { left:22px; }
     @media(max-width:1024px) {
       #sidebar { display:none !important; }
       #appMain { margin-left:0 !important; }
     }
   </style>
 </head>
-<body>
+<body class="bg-surface-50 text-ink-600 antialiased transition-colors duration-300">
 
-<div id="loadingScreen" class="min-h-screen flex items-center justify-center bg-[#f6f5fb]">
-  <div class="flex items-center gap-3 text-ink-500 text-[14px]"><i class="ti ti-loader-2 animate-spin text-xl"></i> Загрузка…</div>
+<div id="loadingScreen" class="min-h-screen flex items-center justify-center bg-surface-50">
+  <div class="flex items-center gap-3 text-ink-300 text-[14px]"><i class="ti ti-loader-2 animate-spin text-xl"></i> Загрузка…</div>
 </div>
 
 <div id="app" class="hidden">
 <div class="flex min-h-screen">
 
-  <aside id="sidebar" class="w-64 shrink-0 bg-white border-r border-surface-200 hidden lg:flex flex-col fixed h-screen z-20">
+  <aside id="sidebar" class="w-64 shrink-0 bg-white border-r border-surface-200 hidden lg:flex flex-col fixed h-screen z-20 transition-colors duration-300">
     <div onclick="go('dashboard')" class="h-16 px-5 flex items-center gap-2.5 border-b border-surface-200 cursor-pointer hover:bg-surface-50 transition">
       <div class="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold text-lg shrink-0">b</div>
       <div><div class="font-bold text-[15px] leading-tight">bid<span class="text-brand-600">RR</span></div><div class="text-[11px] text-ink-300">автобиддер WB</div></div>
     </div>
     <nav class="flex-1 px-3 py-4 space-y-1 text-[14px] overflow-y-auto">
-      <a onclick="go('dashboard')" id="nav-dashboard" class="navitem active flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-layout-dashboard text-ink-300 text-lg shrink-0"></i><span>Обзор</span></a>
-      <a onclick="go('campaigns')" id="nav-campaigns" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-rocket text-ink-300 text-lg shrink-0"></i><span>Кампании</span></a>
-      <a onclick="go('intervals')" id="nav-intervals" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-clock-hour-4 text-ink-300 text-lg shrink-0"></i><span>Интервалы</span></a>
-      <a onclick="go('subscription')" id="nav-subscription" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-crown text-ink-300 text-lg shrink-0"></i><span>Подписка</span></a>
-      <a onclick="go('connect')" id="nav-connect" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-plug text-ink-300 text-lg shrink-0"></i><span>Подключить кабинет</span></a>
-      <a onclick="go('cabinets')" id="nav-cabinets" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-building-store text-ink-300 text-lg shrink-0"></i><span>Кабинеты</span></a>
+      <a onclick="go('dashboard')" id="nav-dashboard" class="navitem active flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-layout-dashboard text-lg shrink-0"></i><span>Обзор</span></a>
+      <a onclick="go('campaigns')" id="nav-campaigns" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-rocket text-lg shrink-0"></i><span>Кампании</span></a>
+      <a onclick="go('intervals')" id="nav-intervals" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-clock-hour-4 text-lg shrink-0"></i><span>Интервалы</span></a>
+      <a onclick="go('subscription')" id="nav-subscription" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-crown text-lg shrink-0"></i><span>Подписка</span></a>
+      <a onclick="go('connect')" id="nav-connect" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-plug text-lg shrink-0"></i><span>Подключить кабинет</span></a>
+      <a onclick="go('cabinets')" id="nav-cabinets" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-building-store text-lg shrink-0"></i><span>Кабинеты</span></a>
     </nav>
     <div class="px-4 pb-4 space-y-2">
       <div class="bg-brand-50 rounded-xl p-3 text-[12px] cursor-pointer hover:bg-brand-100 transition" onclick="go('subscription')">
         <div class="font-semibold text-brand-700 flex items-center gap-1.5"><i class="ti ti-clock-hour-4"></i>Подписка</div>
-        <div class="text-ink-400 mt-1">7 дней бесплатно</div>
+        <div class="text-ink-300 mt-1">7 дней бесплатно</div>
       </div>
     </div>
   </aside>
 
-  <main id="appMain" class="flex-1 min-w-0 lg:ml-64 pb-20 lg:pb-0">
-    <header class="h-16 bg-white/80 backdrop-blur border-b border-surface-200 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-10">
+  <main id="appMain" class="flex-1 min-w-0 lg:ml-64 pb-20 lg:pb-0 transition-colors duration-300">
+    <header class="h-16 bg-white/80 backdrop-blur border-b border-surface-200 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-10 transition-colors duration-300">
       <div class="flex items-center gap-2.5">
         <div onclick="go('dashboard')" class="w-8 h-8 rounded-lg bg-brand-600 lg:hidden flex items-center justify-center text-white font-bold cursor-pointer">b</div>
-        <div id="crumb" class="text-[15px] font-medium text-ink-600">Обзор</div>
+        <div id="crumb" class="text-[15px] font-semibold text-ink-600">Обзор</div>
       </div>
-      <div class="flex items-center gap-2 lg:gap-3">
-        <a href="index.html#lead" class="hidden sm:flex items-center gap-2 text-[13px] bg-good-50 text-good-700 hover:bg-good-100 px-3 py-1.5 rounded-full font-medium"><i class="ti ti-headset"></i>Поддержка</a>
-        <span id="userEmail" class="text-ink-300 text-[13px] hidden md:inline"></span>
-        <div id="userInitials" class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-semibold text-[13px]">—</div>
-        <button onclick="doLogout()" class="w-9 h-9 rounded-full hover:bg-surface-100 flex items-center justify-center text-ink-300"><i class="ti ti-logout text-lg"></i></button>
+      <div class="flex items-center gap-3">
+        <div id="themeToggle" onclick="toggleTheme()" class="toggle-track light" title="Дневной/Ночной режим">
+          <div class="toggle-thumb flex items-center justify-center">
+            <i class="ti ti-sun text-[10px] text-amber-500 absolute" style="left:3px;top:3px"></i>
+            <i class="ti ti-moon text-[10px] text-brand-700 absolute hidden" style="left:23px;top:3px"></i>
+          </div>
+        </div>
+        <a href="index.html#lead" class="hidden sm:flex items-center gap-2 text-[13px] bg-good-50 text-good-700 hover:bg-good-100 px-3 py-1.5 rounded-full font-medium transition-colors"><i class="ti ti-headset"></i>Поддержка</a>
+        <span id="userEmail" class="text-ink-300 text-[13px] hidden md:inline font-medium"></span>
+        <div id="userInitials" class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-[13px]">—</div>
+        <button onclick="doLogout()" class="w-9 h-9 rounded-full hover:bg-surface-100 flex items-center justify-center text-ink-300 transition-colors"><i class="ti ti-logout text-lg"></i></button>
       </div>
     </header>
 
@@ -144,11 +161,11 @@
         <h1 class="text-2xl font-bold mb-1">Обзор</h1>
         <p class="text-ink-300 text-[14px]">Сводная статистика по рекламе</p>
 
-        <div id="dashChips" class="flex gap-2 mt-4 mb-4 flex-wrap">
+        <div id="dashChips" class="flex gap-2 mt-4 mb-5 flex-wrap">
           <span class="chip active">Все кабинеты</span>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
           <div class="kpi-card"><div class="kpi-label">Расход</div><div class="kpi-value">0 ₽</div><div class="kpi-sub">за период</div></div>
           <div class="kpi-card"><div class="kpi-label">Заказы</div><div class="kpi-value">0</div><div class="kpi-sub">шт.</div></div>
           <div class="kpi-card"><div class="kpi-label">ДРР</div><div class="kpi-value text-brand-600">—</div><div class="kpi-sub">цель: &lt;15%</div></div>
@@ -160,8 +177,8 @@
         <div class="card mb-6 overflow-hidden">
           <div class="px-5 py-3 border-b border-surface-200 flex items-center justify-between">
             <div class="inline-flex items-center gap-1 p-1 rounded-xl bg-surface-100 text-[13px]">
-              <button class="px-3.5 py-1.5 rounded-lg font-medium bg-white shadow text-brand-600">По кампаниям</button>
-              <button class="px-3.5 py-1.5 rounded-lg font-medium text-ink-300">По дням</button>
+              <button class="px-3.5 py-1.5 rounded-lg font-semibold bg-white shadow text-brand-600">По кампаниям</button>
+              <button class="px-3.5 py-1.5 rounded-lg font-semibold text-ink-300">По дням</button>
             </div>
           </div>
           <div class="overflow-x-auto">
@@ -176,7 +193,7 @@
                 <th class="font-semibold text-right">Заказы</th>
               </tr></thead>
               <tbody id="dashTableBody">
-                <tr><td colspan="7" class="text-center py-10 text-ink-200"><i class="ti ti-inbox text-3xl mb-2 block"></i>Подключите кабинет, чтобы увидеть статистику</td></tr>
+                <tr><td colspan="7" class="text-center py-12 text-ink-200"><i class="ti ti-inbox text-4xl mb-3 block"></i><span class="text-[14px]">Подключите кабинет, чтобы увидеть статистику</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -187,7 +204,7 @@
         <div class="flex items-center justify-between mb-4">
           <div><h1 class="text-2xl font-bold">Кампании</h1><p class="text-ink-300 text-[14px] mt-1">Управление рекламными кампаниями</p></div>
         </div>
-        <div class="flex items-center gap-1.5 mb-3 flex-wrap">
+        <div class="flex items-center gap-2 mb-4 flex-wrap">
           <span class="chip active">Все</span>
           <span class="chip">Активные</span>
           <span class="chip">На паузе</span>
@@ -197,7 +214,7 @@
           <div class="overflow-x-auto">
             <table class="w-full text-[13px] min-w-[880px]">
               <thead><tr>
-                <th class="py-3 pl-4 w-10"><input type="checkbox"></th>
+                <th class="py-3 pl-4 w-10"><input type="checkbox" class="accent-brand-600"></th>
                 <th class="font-semibold">Кампания</th>
                 <th class="font-semibold">Статус</th>
                 <th class="font-semibold">Настройки</th>
@@ -208,7 +225,7 @@
                 <th class="font-semibold text-right pr-3">ДРР</th>
               </tr></thead>
               <tbody id="campRows">
-                <tr><td colspan="9" class="text-center py-10 text-ink-200"><i class="ti ti-inbox text-3xl mb-2 block"></i>Подключите кабинет для просмотра кампаний</td></tr>
+                <tr><td colspan="9" class="text-center py-12 text-ink-200"><i class="ti ti-inbox text-4xl mb-3 block"></i><span class="text-[14px]">Подключите кабинет для просмотра кампаний</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -218,22 +235,22 @@
       <section id="intervals" class="screen">
         <div class="flex items-center justify-between gap-3 mb-4">
           <div><h1 class="text-2xl font-bold">Интервалы</h1><p class="text-ink-300 text-[14px] mt-1">Время показа рекламных кампаний</p></div>
-          <button class="bg-brand-600 hover:bg-brand-700 text-white text-[14px] font-medium px-4 py-2.5 rounded-xl flex items-center gap-2 whitespace-nowrap"><i class="ti ti-plus"></i><span class="hidden sm:inline">Создать интервал</span></button>
+          <button class="bg-brand-600 hover:bg-brand-700 text-white text-[14px] font-semibold px-5 py-2.5 rounded-xl flex items-center gap-2 whitespace-nowrap transition-colors"><i class="ti ti-plus"></i><span class="hidden sm:inline">Создать интервал</span></button>
         </div>
         <div class="card overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-[13px] min-w-[800px]">
               <thead><tr>
-                <th class="py-2.5 pl-4 w-10"><input type="checkbox"></th>
-                <th class="font-medium">Кампания</th>
-                <th class="font-medium">Кабинет</th>
-                <th class="font-medium">Статус</th>
-                <th class="font-medium">Интервал показа</th>
-                <th class="font-medium text-right">Бюджет</th>
-                <th class="font-medium"></th>
+                <th class="py-2.5 pl-4 w-10"><input type="checkbox" class="accent-brand-600"></th>
+                <th class="font-semibold">Кампания</th>
+                <th class="font-semibold">Кабинет</th>
+                <th class="font-semibold">Статус</th>
+                <th class="font-semibold">Интервал</th>
+                <th class="font-semibold text-right">Бюджет</th>
+                <th class="font-semibold"></th>
               </tr></thead>
               <tbody>
-                <tr><td colspan="7" class="text-center py-10 text-ink-200"><i class="ti ti-inbox text-3xl mb-2 block"></i>Нет интервалов</td></tr>
+                <tr><td colspan="7" class="text-center py-12 text-ink-200"><i class="ti ti-inbox text-4xl mb-3 block"></i><span class="text-[14px]">Нет интервалов</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -243,7 +260,6 @@
       <section id="subscription" class="screen">
         <h1 class="text-2xl font-bold mb-1">Подписка</h1>
         <p class="text-ink-300 text-[14px] mb-4">Платите только за РК, добавленные в сервис. Первая РК бесплатна.</p>
-
         <div class="grid lg:grid-cols-[1fr_minmax(320px,360px)] gap-4 items-start">
           <div class="space-y-4 min-w-0">
             <div class="card p-5">
@@ -252,40 +268,40 @@
                 <span class="text-[12px] text-ink-300">дольше — выгоднее</span>
               </div>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button class="border border-brand-600 bg-brand-50 text-brand-700 rounded-xl px-3 py-3 text-center font-medium text-[13px]">1 мес</button>
-                <button class="border border-surface-200 rounded-xl px-3 py-3 text-center font-medium text-[13px] hover:border-brand-300">3 мес <span class="text-[11px] text-good-600">-10%</span></button>
-                <button class="border border-surface-200 rounded-xl px-3 py-3 text-center font-medium text-[13px] hover:border-brand-300">6 мес <span class="text-[11px] text-good-600">-20%</span></button>
-                <button class="border border-surface-200 rounded-xl px-3 py-3 text-center font-medium text-[13px] hover:border-brand-300">12 мес <span class="text-[11px] text-good-600">-30%</span></button>
+                <button class="border-2 border-brand-600 bg-brand-50 text-brand-700 rounded-xl px-3 py-3 text-center font-semibold text-[13px]">1 мес</button>
+                <button class="border border-surface-200 rounded-xl px-3 py-3 text-center font-semibold text-[13px] hover:border-brand-300 transition-colors">3 мес <span class="text-[11px] text-good-600">-10%</span></button>
+                <button class="border border-surface-200 rounded-xl px-3 py-3 text-center font-semibold text-[13px] hover:border-brand-300 transition-colors">6 мес <span class="text-[11px] text-good-600">-20%</span></button>
+                <button class="border border-surface-200 rounded-xl px-3 py-3 text-center font-semibold text-[13px] hover:border-brand-300 transition-colors">12 мес <span class="text-[11px] text-good-600">-30%</span></button>
               </div>
             </div>
             <div class="card p-5">
               <div class="text-[14px] font-semibold mb-1">Тариф</div>
               <p class="text-[12px] text-ink-300 leading-relaxed mb-3">Оплата по числу подключённых РК. Чем больше РК, тем дешевле каждая.</p>
               <div class="divide-y divide-surface-200">
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-400">1 РК</span><span class="font-semibold text-good-600">Бесплатно</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-400">2–5 РК</span><span class="font-semibold">290 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-400">6–20 РК</span><span class="font-semibold">240 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-400">21–50 РК</span><span class="font-semibold">190 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-400">51–100 РК</span><span class="font-semibold">150 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-400">100+ РК</span><span class="font-semibold">15 990 ₽/мес</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">1 РК</span><span class="font-bold text-good-600">Бесплатно</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">2–5 РК</span><span class="font-bold">290 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">6–20 РК</span><span class="font-bold">240 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">21–50 РК</span><span class="font-bold">190 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">51–100 РК</span><span class="font-bold">150 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">100+ РК</span><span class="font-bold">15 990 ₽/мес</span></div>
               </div>
             </div>
           </div>
           <div class="card p-5 lg:sticky lg:top-4">
             <div class="text-[13px] font-semibold mb-3">К оплате</div>
             <div class="space-y-2 text-[13px]">
-              <div class="flex justify-between"><span class="text-ink-300">Подключённых РК</span><span class="font-medium">0</span></div>
-              <div class="flex justify-between"><span class="text-ink-300">Срок</span><span class="font-medium">1 мес</span></div>
+              <div class="flex justify-between"><span class="text-ink-300">Подключённых РК</span><span class="font-semibold">0</span></div>
+              <div class="flex justify-between"><span class="text-ink-300">Срок</span><span class="font-semibold">1 мес</span></div>
             </div>
             <div class="border-t border-surface-200 mt-3 pt-3">
               <div class="flex items-end justify-between gap-3">
-                <span class="text-[14px] font-medium text-ink-400">Итого</span>
+                <span class="text-[14px] font-medium text-ink-300">Итого</span>
                 <div class="text-right">
-                  <div class="text-[26px] leading-none font-extrabold text-brand-700 tracking-tight">0 ₽</div>
+                  <div class="text-[28px] leading-none font-extrabold text-brand-600 tracking-tight">0 ₽</div>
                   <div class="text-[12px] text-ink-300 mt-1">/мес</div>
                 </div>
               </div>
-              <button class="w-full mt-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-60" disabled><i class="ti ti-qrcode text-[18px]"></i>Оплатить</button>
+              <button class="w-full mt-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors"><i class="ti ti-qrcode text-[18px]"></i>Оплатить</button>
             </div>
           </div>
         </div>
@@ -296,16 +312,16 @@
           <div class="text-center mb-6">
             <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 text-3xl flex items-center justify-center mx-auto mb-3"><i class="ti ti-plug-connected"></i></div>
             <h1 class="text-2xl font-bold">Подключите кабинет WB</h1>
-            <p class="text-ink-300 text-[14px] mt-1">Вставьте API-ключ Wildberries, чтобы подключить рекламный кабинет</p>
+            <p class="text-ink-300 text-[14px] mt-1">Вставьте API-ключ Wildberries для подключения</p>
           </div>
           <div class="card p-6">
-            <div class="text-[13px] font-medium mb-1">API-ключ Wildberries <span class="text-ink-300 font-normal">· Настройки → Доступ к API</span></div>
+            <div class="text-[13px] font-semibold mb-1">API-ключ Wildberries <span class="text-ink-300 font-normal">· Настройки → Доступ к API</span></div>
             <div class="flex gap-2 mt-1">
-              <input class="flex-1 border border-surface-200 rounded-xl px-3 py-2.5 text-[14px] font-mono" placeholder="Вставьте API-ключ">
-              <button class="bg-brand-600 hover:bg-brand-700 text-white px-4 rounded-xl text-[14px] font-medium">Подключить</button>
+              <input class="flex-1 border border-surface-200 rounded-xl px-3 py-2.5 text-[14px] font-mono focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all" placeholder="Вставьте API-ключ">
+              <button class="bg-brand-600 hover:bg-brand-700 text-white px-5 rounded-xl text-[14px] font-semibold transition-colors">Подключить</button>
             </div>
             <div class="text-[12px] text-ink-300 mt-2 flex items-center gap-1.5"><i class="ti ti-shield-lock"></i>Ключ хранится в зашифрованном виде</div>
-            <button class="inline-flex items-center gap-1.5 text-[12px] text-brand-600 hover:text-brand-700 font-medium mt-2"><i class="ti ti-book"></i>Как создать API-ключ</button>
+            <button class="inline-flex items-center gap-1.5 text-[12px] text-brand-600 hover:text-brand-700 font-semibold mt-3 transition-colors"><i class="ti ti-book"></i>Как создать API-ключ</button>
           </div>
         </div>
       </section>
@@ -313,17 +329,17 @@
       <section id="cabinets" class="screen">
         <div class="flex items-center justify-between mb-5">
           <div><h1 class="text-2xl font-bold">Кабинеты</h1><p class="text-ink-300 text-[14px] mt-0.5">Подключённые кабинеты WB</p></div>
-          <button onclick="go('connect')" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2.5 rounded-xl text-[14px] font-medium flex items-center gap-1.5 whitespace-nowrap"><i class="ti ti-plus"></i>Подключить</button>
+          <button onclick="go('connect')" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl text-[14px] font-semibold flex items-center gap-1.5 whitespace-nowrap transition-colors"><i class="ti ti-plus"></i>Подключить</button>
         </div>
         <div class="grid gap-3">
-          <div class="card p-6 text-center text-ink-200"><i class="ti ti-building-store text-4xl mb-2 block"></i>Нет подключённых кабинетов</div>
+          <div class="card p-8 text-center text-ink-200"><i class="ti ti-building-store text-5xl mb-3 block"></i><span class="text-[14px]">Нет подключённых кабинетов</span></div>
         </div>
       </section>
 
     </div>
   </main>
 
-  <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-surface-200 grid grid-cols-5">
+  <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-surface-200 grid grid-cols-5 transition-colors duration-300">
     <a onclick="go('dashboard')" id="mnav-dashboard" class="mnav active"><i class="ti ti-layout-dashboard text-xl"></i><span>Обзор</span></a>
     <a onclick="go('campaigns')" id="mnav-campaigns" class="mnav"><i class="ti ti-rocket text-xl"></i><span>РК</span></a>
     <a onclick="go('intervals')" id="mnav-intervals" class="mnav"><i class="ti ti-clock-hour-4 text-xl"></i><span>Интервалы</span></a>
@@ -335,6 +351,25 @@
 </div>
 
 <script>
+let darkMode = localStorage.getItem('darkMode') === 'true';
+if (darkMode) document.documentElement.classList.add('dark');
+
+function toggleTheme() {
+  darkMode = !darkMode;
+  localStorage.setItem('darkMode', darkMode);
+  document.documentElement.classList.toggle('dark', darkMode);
+  const track = document.getElementById('themeToggle');
+  track.classList.toggle('light', !darkMode);
+  track.classList.toggle('dark-mode', darkMode);
+  track.querySelector('.ti-sun').classList.toggle('hidden', darkMode);
+  track.querySelector('.ti-moon').classList.toggle('hidden', !darkMode);
+  document.querySelectorAll('#sidebar,#appMain,header,.card,.kpi-card,th,td,.chip,.mnav').forEach(el => el.classList.add('transition-colors','duration-300'));
+  document.body.classList.toggle('bg-surface-50', !darkMode);
+  document.body.classList.toggle('bg-ink-600', darkMode);
+  document.body.classList.toggle('text-ink-600', !darkMode);
+  document.body.classList.toggle('text-white', darkMode);
+}
+
 const pages = ['dashboard','campaigns','intervals','subscription','connect','cabinets'];
 const titles = { dashboard:'Обзор', campaigns:'Кампании', intervals:'Интервалы', subscription:'Подписка', connect:'Подключить кабинет', cabinets:'Кабинеты' };
 
