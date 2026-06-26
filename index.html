@@ -732,10 +732,7 @@ function toggleMobileMenu() {
 }
 
 function showDashboard(email) {
-  document.getElementById('dashEmail').textContent = email;
-  document.querySelectorAll('body > section, body > footer, body > header').forEach(el => el.classList.add('hidden'));
-  document.getElementById('dashboard').classList.remove('hidden');
-  document.getElementById('dashboard').classList.add('block');
+  window.location.href = 'app.html';
 }
 
 function doLogout() {
