@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bidRR — автоматизация рекламы на Wildberries</title>
+  <meta name="description" content="bidRR — автобиддер для Wildberries: удерживает топ-позиции по ключевым запросам, экономит рекламный бюджет и показывает каждую копейку." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#f0f4ff',100:'#dbe4ff',200:'#bac8ff',300:'#91a7ff',400:'#748ffc',500:'#5c7cfa',600:'#4c6ef5',700:'#4263eb',800:'#3b5bdb',900:'#364fc7' },
+            surface: { 50:'#fafbff',100:'#f1f3f5',200:'#e9ecef',300:'#dee2e6' },
+            ink: { 50:'#f8f9fa',100:'#ced4da',200:'#adb5bd',300:'#868e96',400:'#495057',500:'#343a40',600:'#212529' }
+          },
+          fontFamily: { sans:['Inter','sans-serif'], display:['Space Grotesk','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; }
+    .glass { backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .reveal { opacity:0; transform:translateY(30px); transition:opacity .7s ease,transform .7s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .hero-gradient { background:linear-gradient(135deg,#f0f4ff 0%,#e8edff 50%,#dbe4ff 100%); }
+    .dark .hero-gradient { background:linear-gradient(135deg,#0f1225 0%,#151a36 50%,#1a2040 100%); }
+    .glow-card { box-shadow:0 24px 60px -20px rgba(76,110,245,.25); }
+    .dark .glow-card { box-shadow:0 24px 60px -20px rgba(76,110,245,.15); }
+    .stat-bar { animation:grow 1.5s ease-out forwards; transform-origin:bottom; }
+    @keyframes grow { from{transform:scaleY(0)} to{transform:scaleY(1)} }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .float-anim { animation:float 3s ease-in-out infinite; }
+    .btn-primary { transition:all .2s; }
+    .btn-primary:hover { transform:translateY(-1px); box-shadow:0 8px 25px -5px rgba(76,110,245,.4); }
+    .toggle-track { transition:background .3s; }
+    .toggle-thumb { transition:transform .3s; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:#4c6ef5; cursor:pointer; border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.2); }
+    input[type=range]::-moz-range-thumb { width:20px; height:20px; border-radius:50%; background:#4c6ef5; cursor:pointer; border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.2); }
+    .faq-answer { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+    .faq-answer.open { max-height:300px; }
+    .mobile-menu { transform:translateX(100%); transition:transform .3s ease; }
+    .mobile-menu.open { transform:translateX(0); }
+    .pulse { animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
+    .gradient-text { background:linear-gradient(135deg,#4c6ef5,#748ffc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .dark .gradient-text { background:linear-gradient(135deg,#748ffc,#bac8ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .card-hover { transition:all .3s; }
+    .card-hover:hover { transform:translateY(-4px); box-shadow:0 12px 40px -10px rgba(0,0,0,.1); }
+    .dark .card-hover:hover { box-shadow:0 12px 40px -10px rgba(0,0,0,.3); }
+    .counter { font-variant-numeric:tabular-nums; }
+  </style>
+</head>
+<body class="bg-white text-ink-600 antialiased transition-colors duration-300">
+
+<header id="header" class="sticky top-0 z-40 bg-white/80 glass border-b border-surface-200 transition-colors duration-300">
+  <div class="max-w-6xl mx-auto px-5 h-16 flex items-center gap-3">
+    <a href="#" class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold text-lg">b</div>
+      <div class="font-bold text-[16px]">bid<span class="text-brand-600">RR</span></div>
+    </a>
+    <nav class="hidden md:flex items-center gap-6 ml-8 text-[14px] text-ink-400">
+      <a href="#features" class="hover:text-brand-600 transition-colors">Возможности</a>
+      <a href="#how" class="hover:text-brand-600 transition-colors">Как работает</a>
+      <a href="#pricing" class="hover:text-brand-600 transition-colors">Тарифы</a>
+      <a href="#reviews" class="hover:text-brand-600 transition-colors">Отзывы</a>
+      <a href="#faq" class="hover:text-brand-600 transition-colors">Вопросы</a>
+      <a href="#lead" class="hover:text-brand-600 transition-colors">Заявка</a>
+    </nav>
+    <div class="ml-auto flex items-center gap-2">
+      <button id="themeToggle" onclick="toggleTheme()" class="w-9 h-9 rounded-xl flex items-center justify-center text-ink-300 hover:bg-surface-100 transition-colors" title="Тёмная тема">
+        <i class="ti ti-sun text-lg dark:hidden"></i>
+        <i class="ti ti-moon text-lg hidden dark:block"></i>
+      </button>
+      <button onclick="openModal('login')" class="hidden sm:block text-[14px] font-medium px-4 py-2 rounded-xl text-ink-400 hover:bg-surface-100 transition-colors">Войти</button>
+      <button onclick="openModal('register')" class="text-[14px] font-medium px-4 py-2 rounded-xl bg-brand-600 text-white hover:bg-brand-700 transition-colors">Начать</button>
+      <button onclick="toggleMobileMenu()" class="md:hidden w-9 h-9 rounded-xl flex items-center justify-center text-ink-400 hover:bg-surface-100">
+        <i class="ti ti-menu-2 text-lg"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="mobileMenu" class="mobile-menu fixed inset-y-0 right-0 w-72 bg-white dark:bg-ink-600 z-50 p-6 shadow-2xl">
+  <div class="flex justify-between items-center mb-8">
+    <div class="font-bold text-[16px]">bid<span class="text-brand-600">RR</span></div>
+    <button onclick="toggleMobileMenu()" class="w-8 h-8 rounded-lg hover:bg-surface-100 flex items-center justify-center">
+      <i class="ti ti-x"></i>
+    </button>
+  </div>
+  <nav class="flex flex-col gap-4 text-[15px]">
+    <a href="#features" onclick="toggleMobileMenu()" class="hover:text-brand-600">Возможности</a>
+    <a href="#how" onclick="toggleMobileMenu()" class="hover:text-brand-600">Как работает</a>
+    <a href="#pricing" onclick="toggleMobileMenu()" class="hover:text-brand-600">Тарифы</a>
+    <a href="#reviews" onclick="toggleMobileMenu()" class="hover:text-brand-600">Отзывы</a>
+    <a href="#faq" onclick="toggleMobileMenu()" class="hover:text-brand-600">Вопросы</a>
+    <a href="#lead" onclick="toggleMobileMenu()" class="hover:text-brand-600">Заявка</a>
+  </nav>
+  <div class="mt-8 space-y-2">
+    <button onclick="openModal('login');toggleMobileMenu()" class="w-full text-[14px] font-medium px-4 py-2.5 rounded-xl border border-surface-200 hover:bg-surface-50">Войти</button>
+    <button onclick="openModal('register');toggleMobileMenu()" class="w-full text-[14px] font-medium px-4 py-2.5 rounded-xl bg-brand-600 text-white hover:bg-brand-700">Начать бесплатно</button>
+  </div>
+</div>
+
+<section class="hero-gradient">
+  <div class="max-w-6xl mx-auto px-5 pt-16 pb-14 grid md:grid-cols-2 gap-10 items-center">
+    <div class="reveal">
+      <div class="inline-flex items-center gap-2 bg-white dark:bg-ink-500 border border-surface-200 dark:border-ink-400 rounded-full px-3 py-1.5 text-[13px] text-ink-400 mb-5">
+        <i class="ti ti-discount-check text-brand-600"></i>Автоматизация рекламы на WB
+      </div>
+      <h1 class="font-display text-4xl md:text-5xl lg:text-[52px] leading-tight font-bold">
+        Автобиддер, который <span class="gradient-text">держит топ</span> и режет расход
+      </h1>
+      <p class="text-ink-300 text-[17px] mt-5 leading-relaxed">
+        bidRR сам управляет ставками на Wildberries: удерживает позиции по ключевым запросам, экономит бюджет и показывает каждую рекламную копейку. Настройте один раз — и занимайтесь бизнесом.
+      </p>
+      <div class="flex flex-wrap gap-3 mt-7">
+        <button onclick="openModal('register')" class="btn-primary bg-brand-600 hover:bg-brand-700 text-white font-medium px-6 py-3.5 rounded-xl text-[15px] flex items-center gap-2">
+          Войти в систему<i class="ti ti-arrow-right"></i>
+        </button>
+        <a href="#how" class="border border-surface-300 dark:border-ink-400 hover:bg-white dark:hover:bg-ink-500 font-medium px-6 py-3.5 rounded-xl text-[15px] flex items-center gap-2 transition-colors">
+          <i class="ti ti-player-play"></i>Как это работает
+        </a>
+      </div>
+      <div class="flex items-center gap-5 mt-7 text-[13px] text-ink-300">
+        <span class="flex items-center gap-1.5"><i class="ti ti-check text-brand-600"></i>7 дней бесплатно</span>
+        <span class="flex items-center gap-1.5"><i class="ti ti-check text-brand-600"></i>Без карты</span>
+        <span class="flex items-center gap-1.5"><i class="ti ti-check text-brand-600"></i>Подключение за 2 минуты</span>
+      </div>
+    </div>
+
+    <div class="reveal float-anim">
+      <div class="rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500 glow-card overflow-hidden">
+        <div class="h-9 bg-surface-50 dark:bg-ink-600 border-b border-surface-200 dark:border-ink-400 flex items-center gap-1.5 px-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-300"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-yellow-300"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-green-300"></span>
+        </div>
+        <div class="p-4">
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <div class="bg-surface-50 dark:bg-ink-600 rounded-lg p-2.5">
+              <div class="text-[10px] text-ink-200 dark:text-ink-100">Расход</div>
+              <div class="font-bold text-[15px] counter">3 240 ₽</div>
+            </div>
+            <div class="bg-surface-50 dark:bg-ink-600 rounded-lg p-2.5">
+              <div class="text-[10px] text-ink-200 dark:text-ink-100">ДРР</div>
+              <div class="font-bold text-[15px] text-brand-600">7,1%</div>
+            </div>
+            <div class="bg-brand-50 dark:bg-brand-900/30 rounded-lg p-2.5">
+              <div class="text-[10px] text-brand-700 dark:text-brand-300">Экономия</div>
+              <div class="font-bold text-[15px] text-brand-700 dark:text-brand-300">31 700 ₽</div>
+            </div>
+          </div>
+          <div class="border border-surface-200 dark:border-ink-400 rounded-xl p-3 mb-2 flex items-center gap-2">
+            <i class="ti ti-target text-brand-600"></i>
+            <div class="flex-1">
+              <div class="text-[12px] font-medium">Удержание позиции по ГЗ</div>
+              <div class="text-[10px] text-ink-200 dark:text-ink-100">позиция 1–4 · авто</div>
+            </div>
+            <span class="w-9 h-5 rounded-full bg-brand-600 relative">
+              <span class="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-white transition-all"></span>
+            </span>
+          </div>
+          <div class="border border-surface-200 dark:border-ink-400 rounded-xl p-3 flex items-end gap-1.5 h-24">
+            <div class="flex-1 bg-brand-200 dark:bg-brand-800 rounded-t stat-bar" style="height:40%"></div>
+            <div class="flex-1 bg-brand-300 dark:bg-brand-700 rounded-t stat-bar" style="height:55%"></div>
+            <div class="flex-1 bg-brand-400 dark:bg-brand-600 rounded-t stat-bar" style="height:48%"></div>
+            <div class="flex-1 bg-brand-500 rounded-t stat-bar" style="height:70%"></div>
+            <div class="flex-1 bg-brand-600 rounded-t stat-bar" style="height:62%"></div>
+            <div class="flex-1 bg-brand-600 rounded-t stat-bar" style="height:80%"></div>
+            <div class="flex-1 bg-brand-700 rounded-t stat-bar" style="height:75%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-y border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-600 transition-colors">
+  <div class="max-w-6xl mx-auto px-5 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div class="reveal">
+      <div class="font-display text-4xl text-brand-600 counter" data-target="25000">0</div>
+      <div class="text-ink-300 text-[13px] mt-1">довольных селлеров</div>
+    </div>
+    <div class="reveal">
+      <div class="font-display text-4xl text-brand-600">30 млн ₽</div>
+      <div class="text-ink-300 text-[13px] mt-1">экономии на 1000 показов/мес</div>
+    </div>
+    <div class="reveal">
+      <div class="font-display text-4xl text-brand-600 counter" data-target="10000">0</div>
+      <div class="text-ink-300 text-[13px] mt-1">авто-кампаний ежедневно</div>
+    </div>
+    <div class="reveal">
+      <div class="font-display text-4xl text-brand-600">~43 сек</div>
+      <div class="text-ink-300 text-[13px] mt-1">средний ответ поддержки</div>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="max-w-6xl mx-auto px-5 py-20">
+  <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+    <div class="text-brand-600 font-semibold text-[14px] mb-2">ВОЗМОЖНОСТИ</div>
+    <h2 class="font-display text-3xl md:text-4xl lg:text-5xl font-bold">Всё для управления рекламой WB</h2>
+    <p class="text-ink-300 mt-4 text-[16px]">От автобиддинга до аналитики и автопополнения — алгоритмы делают рутину за вас.</p>
+  </div>
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-target"></i></div>
+      <h3 class="font-semibold text-[16px]">Удержание позиции по ГЗ</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Задаёте главный запрос и желаемую позицию — алгоритм держит её, перебивая конкурента, и не переплачивает.</p>
+    </div>
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-key"></i></div>
+      <h3 class="font-semibold text-[16px]">Ставки по кластерам</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Своя ставка под каждый кластер фраз: дорогие ВЧ-запросы и дешёвые НЧ работают по отдельной экономике.</p>
+    </div>
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-chart-bar"></i></div>
+      <h3 class="font-semibold text-[16px]">Максимум просмотров</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Распределяет бюджет по интервалам активности и выжимает максимум охвата в пиковые часы трафика WB.</p>
+    </div>
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-wallet"></i></div>
+      <h3 class="font-semibold text-[16px]">Бюджеты и автопополнение</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Реклама не встанет ночью: бюджет пополняется автоматически при достижении порога, с лимитами под контролем.</p>
+    </div>
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-shield-check"></i></div>
+      <h3 class="font-semibold text-[16px]">Предохранители расхода</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Авто-пауза при низком остатке товара или превышении расхода — ни рубля не уйдёт на пустые показы.</p>
+    </div>
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-vocabulary"></i></div>
+      <h3 class="font-semibold text-[16px]">Плюс-фразы и авто-минусация</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Добавляйте продающие фразы, а мусорные (показы без заказов) алгоритм отправит в минус-слова сам.</p>
+    </div>
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-eye"></i></div>
+      <h3 class="font-semibold text-[16px]">Реальные ставки конкурентов</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Видите фактическую ставку аукциона по каждой фразе. Опрос аукциона каждые 5 минут — вы всегда на шаг впереди.</p>
+    </div>
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-chart-line"></i></div>
+      <h3 class="font-semibold text-[16px]">Аналитика и ДРР</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Расход, заказы, CTR, ДРР и TACoS в динамике — с целевой линией и сравнением периодов. И ваша экономия.</p>
+    </div>
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-history"></i></div>
+      <h3 class="font-semibold text-[16px]">Журнал решений алгоритма</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Прозрачно: что и почему сделал биддер — поднял ставку, поставил на паузу, добавил минус-слово. Полный контроль.</p>
+    </div>
+    <div class="reveal card-hover p-6 rounded-2xl border border-surface-200 dark:border-ink-400 bg-white dark:bg-ink-500">
+      <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center text-xl mb-4"><i class="ti ti-device-mobile"></i></div>
+      <h3 class="font-semibold text-[16px]">В телефоне и в вебе</h3>
+      <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Полноценный веб-кабинет и управление через Telegram-бота. Несколько рекламных кабинетов — в одном окне.</p>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="bg-surface-50 dark:bg-ink-600 border-y border-surface-200 dark:border-ink-400 transition-colors">
+  <div class="max-w-6xl mx-auto px-5 py-20">
+    <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+      <div class="text-brand-600 font-semibold text-[14px] mb-2">КАК ЭТО РАБОТАЕТ</div>
+      <h2 class="font-display text-3xl md:text-4xl lg:text-5xl font-bold">Запуск за 2 минуты</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="reveal card-hover bg-white dark:bg-ink-500 rounded-2xl border border-surface-200 dark:border-ink-400 p-7">
+        <div class="text-brand-600 font-extrabold text-2xl">01</div>
+        <h3 class="font-semibold text-[17px] mt-3">Подключите кабинет</h3>
+        <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Вставьте API-ключ Wildberries (раздел «Продвижение»). Мы мгновенно подтянем ваши кампании и покажем, где вы переплачиваете.</p>
+      </div>
+      <div class="reveal card-hover bg-white dark:bg-ink-500 rounded-2xl border border-surface-200 dark:border-ink-400 p-7">
+        <div class="text-brand-600 font-extrabold text-2xl">02</div>
+        <h3 class="font-semibold text-[17px] mt-3">Выберите цель</h3>
+        <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Стратегия в один клик: Экономная, Оптимальная или Агрессивная. Или тонко настройте позицию, ставки и интервалы.</p>
+      </div>
+      <div class="reveal card-hover bg-white dark:bg-ink-500 rounded-2xl border border-surface-200 dark:border-ink-400 p-7">
+        <div class="text-brand-600 font-extrabold text-2xl">03</div>
+        <h3 class="font-semibold text-[17px] mt-3">Алгоритм работает</h3>
+        <p class="text-ink-300 text-[14px] mt-2 leading-relaxed">Биддер держит позиции, режет лишний расход и присылает алерты. Вы лишь смотрите статистику и экономию.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" class="max-w-6xl mx-auto px-5 py-20">
+  <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+    <div class="text-brand-600 font-semibold text-[14px] mb-2">ТАРИФЫ</div>
+    <h2 class="font-display text-3xl md:text-4xl lg:text-5xl font-bold">Платите только за подключённые РК</h2>
+    <p class="text-ink-300 mt-4 text-[16px]">Оплата считается по каждому кабинету отдельно — за кампании, которые вы добавили в сервис.</p>
+  </div>
+  <div class="reveal rounded-3xl border border-surface-200 dark:border-ink-400 overflow-hidden grid md:grid-cols-2 glow-card">
+    <div class="p-8 md:p-10 bg-surface-50 dark:bg-ink-600 md:border-r border-surface-200 dark:border-ink-400">
+      <div class="text-brand-600 font-semibold text-[13px]">PRO SELLER · ОПЛАТА ПО РК</div>
+      <div id="lpUnit" class="text-ink-300 text-[15px] mt-5">1 РК в кабинете</div>
+      <div id="lpPrice" class="font-display text-5xl md:text-6xl text-brand-600 mt-2 leading-none">бесплатно</div>
+      <div id="lpHint" class="text-[12px] text-brand-600 font-medium mt-6 flex items-center gap-1.5">
+        <i class="ti ti-hand-finger"></i>Двигайте ползунок, чтобы рассчитать <i class="ti ti-arrow-right pulse"></i>
+      </div>
+      <input type="range" min="1" max="151" value="1" id="lpSlider" oninput="calcPrice()" class="w-full accent-brand-600 mt-3">
+      <div class="flex justify-between text-[12px] text-ink-200 mt-2"><span>1 РК</span><span class="text-brand-600 font-medium">Безлимит</span></div>
+      <button onclick="openModal('register')" class="mt-8 w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3.5 rounded-xl text-[15px] btn-primary">Войти в систему</button>
+    </div>
+    <div class="p-8 md:p-10">
+      <div class="font-semibold text-[18px]">Всё включено в тариф</div>
+      <p class="text-ink-300 text-[14px] mt-1">Никаких доплат за функции — платите только за число подключённых РК.</p>
+      <ul class="mt-5 space-y-3 text-[15px]">
+        <li class="flex gap-3"><i class="ti ti-circle-check text-brand-600 text-lg"></i>Все алгоритмы автобиддинга и стратегии</li>
+        <li class="flex gap-3"><i class="ti ti-circle-check text-brand-600 text-lg"></i>Бюджеты, автопополнение, предохранители</li>
+        <li class="flex gap-3"><i class="ti ti-circle-check text-brand-600 text-lg"></i>Плюс-фразы и авто-минусация</li>
+        <li class="flex gap-3"><i class="ti ti-circle-check text-brand-600 text-lg"></i>Аналитика ДРР, журнал решений, алерты</li>
+        <li class="flex gap-3"><i class="ti ti-circle-check text-brand-600 text-lg"></i>Несколько кабинетов, Telegram + веб</li>
+      </ul>
+      <div class="mt-6 bg-brand-50 dark:bg-brand-900/20 rounded-xl p-4 text-[13px] text-brand-700 dark:text-brand-300 flex items-start gap-2">
+        <i class="ti ti-infinity text-lg mt-0.5"></i>
+        <span>Больше 150 РК — безлимит за 15 990 ₽/мес. Оплата считается по каждому кабинету отдельно.</span>
+      </div>
+    </div>
+  </div>
+  <div class="reveal mt-5 rounded-2xl border border-surface-200 dark:border-ink-400 p-6 flex flex-col md:flex-row md:items-center gap-4">
+    <div class="flex-1">
+      <div class="font-semibold text-[16px]">Внедрение под ключ</div>
+      <p class="text-ink-300 text-[14px] mt-1">Личный менеджер настроит кабинет и стратегии, разберёт аналитику и проведёт индивидуальные сессии.</p>
+    </div>
+    <a href="#lead" class="border border-surface-300 dark:border-ink-400 hover:bg-surface-50 dark:hover:bg-ink-500 font-medium px-5 py-3 rounded-xl text-center whitespace-nowrap transition-colors">Обсудить внедрение</a>
+  </div>
+</section>
+
+<section id="reviews" class="bg-surface-50 dark:bg-ink-600 border-y border-surface-200 dark:border-ink-400 transition-colors">
+  <div class="max-w-6xl mx-auto px-5 py-20">
+    <div class="grid md:grid-cols-2 gap-10 items-center">
+      <div class="reveal">
+        <div class="text-brand-600 font-semibold text-[14px] mb-3">ОТЗЫВЫ</div>
+        <h2 class="font-display text-3xl md:text-4xl font-bold">Нам доверяют 25 000+ селлеров</h2>
+        <p class="text-ink-300 mt-4 text-[16px] leading-relaxed">bidRR — авторизованный сервис WB: работаем через официальный API, без риска для кабинета. Технологичный автобиддинг на ИИ, прозрачная аналитика и поддержка, которая отвечает в среднем за 43 секунды.</p>
+        <div class="flex flex-wrap gap-3 mt-6">
+          <a href="#" class="border border-surface-300 dark:border-ink-400 hover:bg-white dark:hover:bg-ink-500 px-4 py-2.5 rounded-xl text-[14px] font-medium flex items-center gap-2 transition-colors">
+            <i class="ti ti-brand-telegram"></i>Канал в Telegram
+          </a>
+          <a href="#lead" class="border border-surface-300 dark:border-ink-400 hover:bg-white dark:hover:bg-ink-500 px-4 py-2.5 rounded-xl text-[14px] font-medium flex items-center gap-2 transition-colors">
+            <i class="ti ti-headset"></i>Поддержка
+          </a>
+        </div>
+      </div>
+      <div class="grid gap-4 reveal">
+        <div class="bg-white dark:bg-ink-500 rounded-2xl border border-surface-200 dark:border-ink-400 p-5 card-hover">
+          <div class="flex gap-1 text-yellow-400 mb-2">
+            <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
+          </div>
+          <p class="text-[14px]">«Передал рекламу bidRR и забыл про ручную крутёжку ставок ночами. ДРР упал, заказы выросли».</p>
+          <div class="text-ink-200 text-[12px] mt-2">— селлер, одежда</div>
+        </div>
+        <div class="bg-white dark:bg-ink-500 rounded-2xl border border-surface-200 dark:border-ink-400 p-5 card-hover">
+          <div class="flex gap-1 text-yellow-400 mb-2">
+            <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
+          </div>
+          <p class="text-[14px]">«Управляю с телефона между делами. Автопополнение спасает — реклама не встаёт по ночам».</p>
+          <div class="text-ink-200 text-[12px] mt-2">— селлер, товары для дома</div>
+        </div>
+        <div class="bg-white dark:bg-ink-500 rounded-2xl border border-surface-200 dark:border-ink-400 p-5 card-hover">
+          <div class="flex gap-1 text-yellow-400 mb-2">
+            <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
+          </div>
+          <p class="text-[14px]">«Раньше тратил 3 часа на крутёжку ставок. Теперь всё автоматически, а я занимаюсь развитием бизнеса».</p>
+          <div class="text-ink-200 text-[12px] mt-2">— селлер, электроника</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="max-w-3xl mx-auto px-5 py-20">
+  <div class="text-center mb-10 reveal"><h2 class="font-display text-3xl font-bold">Частые вопросы</h2></div>
+  <div class="space-y-3" id="faqList"></div>
+</section>
+
+<section id="lead" class="max-w-6xl mx-auto px-5 py-20">
+  <div class="rounded-3xl border border-surface-200 dark:border-ink-400 grid md:grid-cols-2 overflow-hidden">
+    <div class="p-8 md:p-10 bg-surface-50 dark:bg-ink-600 md:border-r border-surface-200 dark:border-ink-400 reveal">
+      <div class="text-brand-600 font-semibold text-[13px] mb-2">ОСТАВИТЬ ЗАЯВКУ</div>
+      <h2 class="font-display text-2xl md:text-3xl font-bold">Поможем подключиться и настроить</h2>
+      <p class="text-ink-300 mt-3 text-[15px] leading-relaxed">Оставьте контакты — менеджер свяжется, ответит на вопросы и поможет запустить рекламу. Без навязывания.</p>
+      <div class="mt-6 space-y-2 text-[14px]">
+        <div class="flex items-center gap-2"><i class="ti ti-clock text-brand-600"></i>Перезвоним в рабочее время</div>
+        <div class="flex items-center gap-2"><i class="ti ti-shield-lock text-brand-600"></i>Контакты не передаём третьим лицам</div>
+      </div>
+    </div>
+    <div class="p-8 md:p-10 reveal">
+      <form id="leadForm" onsubmit="submitLead(event)" class="space-y-3">
+        <div>
+          <label class="text-[13px] font-medium">Имя</label>
+          <input name="name" required class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 text-[14px] mt-1 bg-white dark:bg-ink-500 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="Как к вам обращаться">
+        </div>
+        <div>
+          <label class="text-[13px] font-medium">Телефон</label>
+          <input name="phone" type="tel" required class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 text-[14px] mt-1 bg-white dark:bg-ink-500 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="+7 ___ ___-__-__">
+        </div>
+        <div>
+          <label class="text-[13px] font-medium">Магазин на WB <span class="text-ink-200 font-normal">(необязательно)</span></label>
+          <input name="shop" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 text-[14px] mt-1 bg-white dark:bg-ink-500 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="название или ссылка">
+        </div>
+        <label class="flex items-start gap-2 text-[12px] text-ink-300 pt-1 cursor-pointer">
+          <input type="checkbox" required class="accent-brand-600 mt-0.5 shrink-0">
+          <span>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</span>
+        </label>
+        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl btn-primary">Оставить заявку</button>
+      </form>
+      <div id="leadOk" class="hidden text-center py-10">
+        <div class="w-14 h-14 rounded-2xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 text-3xl flex items-center justify-center mx-auto mb-3"><i class="ti ti-circle-check"></i></div>
+        <div class="font-semibold text-[17px]">Спасибо, заявка принята!</div>
+        <p class="text-ink-300 text-[14px] mt-1">Менеджер свяжется с вами в рабочее время.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-5 pb-20">
+  <div class="reveal rounded-3xl bg-brand-600 text-white px-8 py-14 text-center">
+    <h2 class="font-display text-3xl md:text-4xl lg:text-5xl font-bold">Передайте рекламу алгоритму</h2>
+    <p class="text-brand-100 mt-3 text-[17px]">7 дней бесплатно. Без карты. Подключение за 2 минуты.</p>
+    <button onclick="openModal('register')" class="mt-7 bg-white text-brand-700 font-semibold px-7 py-3.5 rounded-xl text-[15px] hover:bg-brand-50 btn-primary">Войти в систему</button>
+  </div>
+</section>
+
+<footer class="border-t border-surface-200 dark:border-ink-400 transition-colors">
+  <div class="max-w-6xl mx-auto px-5 py-10 grid md:grid-cols-4 gap-8 text-[14px]">
+    <div>
+      <div class="flex items-center gap-2.5 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">b</div>
+        <div class="font-bold">bid<span class="text-brand-600">RR</span></div>
+      </div>
+      <p class="text-ink-200 text-[13px]">Автоматизация рекламы на Wildberries.</p>
+    </div>
+    <div>
+      <div class="font-semibold mb-3">Продукт</div>
+      <ul class="space-y-2 text-ink-300">
+        <li><a href="#features" class="hover:text-brand-600 transition-colors">Возможности</a></li>
+        <li><a href="#pricing" class="hover:text-brand-600 transition-colors">Тарифы</a></li>
+        <li><a href="#how" class="hover:text-brand-600 transition-colors">Как работает</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="font-semibold mb-3">Контакты</div>
+      <ul class="space-y-2 text-ink-300">
+        <li><a href="tel:+79001234567" class="hover:text-brand-600 transition-colors">+7 900-123-45-67</a></li>
+        <li><a href="mailto:info@bidrr.ru" class="hover:text-brand-600 transition-colors">info@bidrr.ru</a></li>
+        <li><a href="#" class="hover:text-brand-600 transition-colors">Поддержка в Telegram</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="font-semibold mb-3">Документы</div>
+      <ul class="space-y-2 text-ink-300">
+        <li><a href="#" class="hover:text-brand-600 transition-colors">Оферта</a></li>
+        <li><a href="#" class="hover:text-brand-600 transition-colors">Пользовательское соглашение</a></li>
+        <li><a href="#" class="hover:text-brand-600 transition-colors">Политика конфиденциальности</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-surface-200 dark:border-ink-400 py-5 text-center text-ink-200 text-[12px] px-5 transition-colors">
+    © 2024 bidRR. Все права защищены.
+  </div>
+</footer>
+
+<div id="authModal" class="fixed inset-0 bg-black/45 z-50 hidden items-center justify-center p-4">
+  <div class="bg-white dark:bg-ink-500 rounded-2xl w-full max-w-[420px] p-7 relative transition-colors">
+    <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-lg hover:bg-surface-100 dark:hover:bg-ink-600 flex items-center justify-center text-ink-200 transition-colors">
+      <i class="ti ti-x"></i>
+    </button>
+    <div class="flex items-center gap-2.5 mb-4">
+      <div class="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold">b</div>
+      <div class="font-bold text-[16px]">bid<span class="text-brand-600">RR</span></div>
+    </div>
+
+    <div id="authTabs" class="flex gap-1 bg-surface-100 dark:bg-ink-600 rounded-xl p-1 mb-5 text-[14px] transition-colors">
+      <button id="tabLogin" onclick="switchTab('login')" class="flex-1 py-2 rounded-lg font-medium bg-white dark:bg-ink-500 shadow transition-colors">Вход</button>
+      <button id="tabReg" onclick="switchTab('register')" class="flex-1 py-2 rounded-lg font-medium transition-colors">Регистрация</button>
+    </div>
+
+    <div id="authErr" class="hidden text-[13px] text-red-700 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2 mb-3"></div>
+
+    <div id="loginView">
+      <label class="text-[13px] font-medium">Почта</label>
+      <input id="loginEmail" type="email" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 text-[14px] mt-1 mb-3 bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="you@example.com">
+      <label class="text-[13px] font-medium">Пароль</label>
+      <div class="relative mt-1 mb-1">
+        <input id="loginPass" type="password" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 pr-10 text-[14px] bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="••••••••">
+        <button type="button" tabindex="-1" onclick="togglePass('loginPass',this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-200 hover:text-ink-400 p-1">
+          <i class="ti ti-eye text-[18px]"></i>
+        </button>
+      </div>
+      <div class="text-right mb-3"><a onclick="showReset()" class="text-[12px] text-brand-600 cursor-pointer hover:underline">Забыли пароль?</a></div>
+      <button id="loginBtn" onclick="doLogin()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl btn-primary">Войти</button>
+    </div>
+
+    <div id="regView" class="hidden">
+      <div id="reg-1">
+        <label class="text-[13px] font-medium">Почта</label>
+        <input id="regEmail" type="email" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 text-[14px] mt-1 mb-3 bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="you@example.com">
+        <button id="regStartBtn" onclick="regStart()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl btn-primary">Получить код</button>
+        <p class="text-ink-200 text-[11px] mt-3 text-center">Пришлём 6-значный код на почту</p>
+      </div>
+      <div id="reg-2" class="hidden">
+        <p class="text-[13px] mb-3">Код отправлен на <b id="regEmailEcho">you@example.com</b></p>
+        <input id="regCode" maxlength="6" inputmode="numeric" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 text-[20px] text-center tracking-[0.5em] mb-3 bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="______">
+        <button id="regVerifyBtn" onclick="regVerify()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl btn-primary">Подтвердить</button>
+        <div class="flex items-center justify-between mt-3 text-[12px]"><button onclick="regStep(1)" class="text-ink-300 hover:text-ink-500">← изменить почту</button><a onclick="regStart()" class="text-brand-600 cursor-pointer hover:underline">Отправить код снова</a></div>
+      </div>
+      <div id="reg-3" class="hidden">
+        <label class="text-[13px] font-medium">Пароль</label>
+        <div class="relative mt-1 mb-3">
+          <input id="regPass1" type="password" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 pr-10 text-[14px] bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="Минимум 8 символов">
+          <button type="button" tabindex="-1" onclick="togglePass('regPass1',this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-200 hover:text-ink-400 p-1"><i class="ti ti-eye text-[18px]"></i></button>
+        </div>
+        <label class="text-[13px] font-medium">Повторите пароль</label>
+        <div class="relative mt-1 mb-3">
+          <input id="regPass2" type="password" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 pr-10 text-[14px] bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="••••••••">
+          <button type="button" tabindex="-1" onclick="togglePass('regPass2',this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-200 hover:text-ink-400 p-1"><i class="ti ti-eye text-[18px]"></i></button>
+        </div>
+        <label class="flex items-start gap-2 text-[12px] text-ink-300 mb-4 cursor-pointer">
+          <input id="regConsent" type="checkbox" class="accent-brand-600 mt-0.5 shrink-0">
+          <span>Согласен на обработку персональных данных и принимаю пользовательское соглашение</span>
+        </label>
+        <button id="regFinishBtn" onclick="regFinish()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl btn-primary">Продолжить</button>
+      </div>
+    </div>
+
+    <div id="resetView" class="hidden">
+      <div class="font-semibold text-[16px] mb-1">Сброс пароля</div>
+      <div id="rst-1">
+        <p class="text-ink-300 text-[13px] mb-3">Укажите почту — пришлём 6-значный код для смены пароля.</p>
+        <label class="text-[13px] font-medium">Почта</label>
+        <input id="rstEmail" type="email" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 text-[14px] mt-1 mb-3 bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="you@example.com">
+        <button id="rstStartBtn" onclick="resetStart()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl btn-primary">Получить код</button>
+      </div>
+      <div id="rst-2" class="hidden">
+        <p class="text-[13px] mb-3">Код отправлен на <b id="rstEmailEcho">you@example.com</b></p>
+        <input id="rstCode" maxlength="6" inputmode="numeric" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 text-[20px] text-center tracking-[0.5em] mb-3 bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="______">
+        <button id="rstVerifyBtn" onclick="resetVerify()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl btn-primary">Подтвердить код</button>
+        <div class="flex items-center justify-between mt-3 text-[12px]"><button onclick="resetStep(1)" class="text-ink-300 hover:text-ink-500">← изменить почту</button><a onclick="resetStart()" class="text-brand-600 cursor-pointer hover:underline">Отправить код снова</a></div>
+      </div>
+      <div id="rst-3" class="hidden">
+        <p class="text-[13px] mb-3">Код подтверждён. Задайте новый пароль.</p>
+        <label class="text-[13px] font-medium">Новый пароль</label>
+        <div class="relative mt-1 mb-3">
+          <input id="rstPass1" type="password" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 pr-10 text-[14px] bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="Минимум 8 символов">
+          <button type="button" tabindex="-1" onclick="togglePass('rstPass1',this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-200 hover:text-ink-400 p-1"><i class="ti ti-eye text-[18px]"></i></button>
+        </div>
+        <label class="text-[13px] font-medium">Повторите пароль</label>
+        <div class="relative mt-1 mb-3">
+          <input id="rstPass2" type="password" class="w-full border border-surface-200 dark:border-ink-400 rounded-xl px-3 py-2.5 pr-10 text-[14px] bg-white dark:bg-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600 transition-all" placeholder="••••••••">
+          <button type="button" tabindex="-1" onclick="togglePass('rstPass2',this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-200 hover:text-ink-400 p-1"><i class="ti ti-eye text-[18px]"></i></button>
+        </div>
+        <button id="rstConfirmBtn" onclick="resetConfirm()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl btn-primary">Сменить пароль</button>
+      </div>
+      <div class="text-center mt-4"><a onclick="switchTab('login')" class="text-[12px] text-ink-300 cursor-pointer hover:underline">← Назад ко входу</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FAQ_DATA = [
+  { q:'Нужен ли доступ к кабинету WB?', a:'Да, для работы биддера необходим API-ключ Wildberries (раздел «Продвижение»). Мы работаем через официальный API, без риска для кабинета.' },
+  { q:'Как считается оплата?', a:'Оплата по числу подключённых рекламных кампаний в каждом кабинете. Первая РК — бесплатно. Чем больше РК, тем дешевле каждая.' },
+  { q:'Можно ли отменить подписку?', a:'Да, в любой момент. Без штрафов и скрытых платежей. Доступ сохраняется до конца оплаченного периода.' },
+  { q:'Безопасно ли это?', a:'bidRR — авторизованный сервис Wildberries. Мы работаем через официальный API и не имеем доступа к вашим личным данным и заказам.' },
+  { q:'Есть ли пробный период?', a:'Да, 7 дней бесплатно. Без карты. Подключение занимает 2 минуты.' },
+  { q:'Как работает автопополнение?', a:'Вы задаёте лимит и порог. Когда баланс рекламного кабинета падает ниже порога, биддер автоматически пополняет его, не превышая заданный лимит.' },
+  { q:'Что такое ДРР и зачем его отслеживать?', a:'ДРР (доля рекламных расходов) — отношение рекламного бюджета к выручке. Чем ниже ДРР, тем эффективнее реклама. Наш алгоритм стремится минимизировать ДРР при сохранении позиций.' },
+  { q:'Можно ли управлять с телефона?', a:'Да, у нас есть полноценный веб-кабинет и Telegram-бот для управления рекламой из любого устройства.' }
+];
+
+const faqList = document.getElementById('faqList');
+FAQ_DATA.forEach((item,i) => {
+  const div = document.createElement('div');
+  div.className = 'reveal rounded-2xl border border-surface-200 dark:border-ink-400 overflow-hidden transition-colors';
+  div.innerHTML = `
+    <button onclick="toggleFaq(${i})" class="w-full flex items-center justify-between p-5 text-left font-medium text-[15px] hover:bg-surface-50 dark:hover:bg-ink-600 transition-colors">
+      <span>${item.q}</span>
+      <i class="ti ti-chevron-down text-ink-200 transition-transform duration-300" id="faqIcon${i}"></i>
+    </button>
+    <div class="faq-answer px-5 text-[14px] text-ink-300 leading-relaxed" id="faqAns${i}">${item.a}</div>
+  `;
+  faqList.appendChild(div);
+});
+
+function toggleFaq(i) {
+  const ans = document.getElementById('faqAns'+i);
+  const icon = document.getElementById('faqIcon'+i);
+  ans.classList.toggle('open');
+  icon.style.transform = ans.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+let darkMode = localStorage.getItem('darkMode') === 'true';
+if (darkMode) document.documentElement.classList.add('dark');
+if (darkMode) document.body.classList.add('bg-ink-600','text-white');
+
+function toggleTheme() {
+  darkMode = !darkMode;
+  localStorage.setItem('darkMode', darkMode);
+  document.documentElement.classList.toggle('dark', darkMode);
+  document.body.classList.toggle('bg-ink-600', darkMode);
+  document.body.classList.toggle('text-white', darkMode);
+  document.body.classList.toggle('bg-white', !darkMode);
+  document.body.classList.toggle('text-ink-600', !darkMode);
+}
+
+function calcPrice() {
+  const v = parseInt(document.getElementById('lpSlider').value);
+  const unit = document.getElementById('lpUnit');
+  const price = document.getElementById('lpPrice');
+  if (v === 1) { unit.textContent = '1 РК в кабинете'; price.textContent = 'бесплатно'; }
+  else if (v <= 5) { unit.textContent = v + ' РК в кабинете'; price.textContent = (v*290).toLocaleString('ru-RU') + ' ₽/мес'; }
+  else if (v <= 20) { unit.textContent = v + ' РК в кабинете'; price.textContent = (v*240).toLocaleString('ru-RU') + ' ₽/мес'; }
+  else if (v <= 50) { unit.textContent = v + ' РК в кабинете'; price.textContent = (v*190).toLocaleString('ru-RU') + ' ₽/мес'; }
+  else if (v <= 100) { unit.textContent = v + ' РК в кабинете'; price.textContent = (v*150).toLocaleString('ru-RU') + ' ₽/мес'; }
+  else { unit.textContent = 'Безлимит (150+ РК)'; price.textContent = '15 990 ₽/мес'; }
+}
+
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry,i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold:0.1 });
+reveals.forEach(el => observer.observe(el));
+
+function openModal(type) {
+  const modal = document.getElementById('authModal');
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  switchTab(type);
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  const modal = document.getElementById('authModal');
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+  document.body.style.overflow = '';
+}
+
+function switchTab(tab) {
+  document.getElementById('loginView').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('regView').classList.toggle('hidden', tab !== 'register');
+  document.getElementById('resetView').classList.add('hidden');
+  document.getElementById('tabLogin').classList.toggle('bg-white', tab === 'login');
+  document.getElementById('tabLogin').classList.toggle('dark:bg-ink-500', tab === 'login');
+  document.getElementById('tabLogin').classList.toggle('shadow', tab === 'login');
+  document.getElementById('tabReg').classList.toggle('bg-white', tab === 'register');
+  document.getElementById('tabReg').classList.toggle('dark:bg-ink-500', tab === 'register');
+  document.getElementById('tabReg').classList.toggle('shadow', tab === 'register');
+  document.getElementById('authErr').classList.add('hidden');
+}
+
+function showReset() {
+  document.getElementById('loginView').classList.add('hidden');
+  document.getElementById('regView').classList.add('hidden');
+  document.getElementById('resetView').classList.remove('hidden');
+}
+
+function togglePass(id, btn) {
+  const input = document.getElementById(id);
+  const icon = btn.querySelector('i');
+  if (input.type === 'password') { input.type = 'text'; icon.className = 'ti ti-eye-off text-[18px]'; }
+  else { input.type = 'password'; icon.className = 'ti ti-eye text-[18px]'; }
+}
+
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  if (!email || !pass) { showError('Заполните все поля'); return; }
+  showError('Демо-режим: вход недоступен');
+}
+
+function regStart() {
+  const email = document.getElementById('regEmail').value;
+  if (!email) { showError('Укажите почту'); return; }
+  regStep(2);
+  document.getElementById('regEmailEcho').textContent = email;
+}
+
+function regStep(n) {
+  ['reg-1','reg-2','reg-3'].forEach((id,i) => {
+    document.getElementById(id).classList.toggle('hidden', i !== n-1);
+  });
+}
+
+function regVerify() {
+  const code = document.getElementById('regCode').value;
+  if (code.length !== 6) { showError('Введите 6-значный код'); return; }
+  regStep(3);
+}
+
+function regFinish() {
+  const p1 = document.getElementById('regPass1').value;
+  const p2 = document.getElementById('regPass2').value;
+  if (p1.length < 8) { showError('Пароль минимум 8 символов'); return; }
+  if (p1 !== p2) { showError('Пароли не совпадают'); return; }
+  if (!document.getElementById('regConsent').checked) { showError('Необходимо согласие'); return; }
+  showError('Демо-регистрация завершена!');
+}
+
+function resetStart() {
+  const email = document.getElementById('rstEmail').value;
+  if (!email) { showError('Укажите почту'); return; }
+  resetStep(2);
+  document.getElementById('rstEmailEcho').textContent = email;
+}
+
+function resetStep(n) {
+  ['rst-1','rst-2','rst-3'].forEach((id,i) => {
+    document.getElementById(id).classList.toggle('hidden', i !== n-1);
+  });
+}
+
+function resetVerify() {
+  const code = document.getElementById('rstCode').value;
+  if (code.length !== 6) { showError('Введите 6-значный код'); return; }
+  resetStep(3);
+}
+
+function resetConfirm() {
+  const p1 = document.getElementById('rstPass1').value;
+  const p2 = document.getElementById('rstPass2').value;
+  if (p1.length < 8) { showError('Пароль минимум 8 символов'); return; }
+  if (p1 !== p2) { showError('Пароли не совпадают'); return; }
+  showError('Пароль успешно изменён!');
+}
+
+function showError(msg) {
+  const el = document.getElementById('authErr');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  setTimeout(() => el.classList.add('hidden'), 3000);
+}
+
+function submitLead(e) {
+  e.preventDefault();
+  const form = document.getElementById('leadForm');
+  const ok = document.getElementById('leadOk');
+  form.classList.add('hidden');
+  ok.classList.remove('hidden');
+}
+
+document.getElementById('authModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const header = document.getElementById('header');
+  const current = window.pageYOffset;
+  if (current > lastScroll && current > 100) {
+    header.style.transform = 'translateY(-100%)';
+  } else {
+    header.style.transform = 'translateY(0)';
+  }
+  lastScroll = current;
+});
+</script>
+</body>
+</html>
