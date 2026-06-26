@@ -17,9 +17,9 @@
         extend: {
           colors: {
             brand: { 50:'#faf5ff',100:'#f3e8ff',200:'#e9d5ff',300:'#d8b4fe',400:'#c084fc',500:'#a855f7',600:'#9333ea',700:'#7e22ce',800:'#6b21a8',900:'#581c87' },
-            surface: { 50:'#fafaff',100:'#f3f2f7',200:'#e8e6ef',300:'#d5d3de' },
+            surface: { 50:'#fafaff',100:'#f0eef7',200:'#e4e1ef',300:'#d5d3de' },
             ink: { 50:'#f8f7fa',100:'#cfcce0',200:'#a9a6b8',300:'#8682a0',400:'#5c5878',500:'#3d3a54',600:'#23203c' },
-            good: { 50:'#f0fdf4',100:'#dcfce7',600:'#16a34a',700:'#15803d' },
+            good: { 50:'#f0fdf4',600:'#16a34a',700:'#15803d' },
             warn: { 600:'#eab308',700:'#ca8a04' }
           },
           fontFamily: { sans:['Plus Jakarta Sans','sans-serif'], display:['Space Grotesk','sans-serif'] }
@@ -60,140 +60,156 @@
   </script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Plus Jakarta Sans',sans-serif; background:#fafaff; }
-    .dark body, .dark { background:#1a1630; color:#e8e6ef; }
-    .navitem.active { background:#f3e8ff; color:#7e22ce; }
+    body { font-family:'Plus Jakarta Sans',sans-serif; background:#f5f3fa; color:#2d2a45; }
+    .dark body, .dark { background:#13111c; color:#e8e6f0; }
+
+    .glass { backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+
+    .sidebar-wrap { background:white; border-right:1px solid #eae8f2; }
+    .dark .sidebar-wrap { background:#1a1730; border-color:#2d2a48; }
+
+    .navitem { transition:all .15s; font-weight:600; }
+    .navitem.active { background:linear-gradient(135deg,#f3e8ff,#ede9fe); color:#7e22ce; box-shadow:0 2px 8px -2px rgba(126,34,206,.15); }
     .navitem.active i { color:#9333ea; }
-    .dark .navitem.active { background:rgba(147,51,234,.15); color:#c084fc; }
+    .dark .navitem.active { background:linear-gradient(135deg,rgba(147,51,234,.2),rgba(126,34,206,.15)); color:#d8b4fe; box-shadow:0 2px 12px -2px rgba(147,51,234,.2); }
+    .navitem:hover:not(.active) { background:#f8f6fd; }
+    .dark .navitem:hover:not(.active) { background:rgba(147,51,234,.08); }
+
     .screen { display:none; }
     .screen.active { display:block; }
-    .mnav { display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 0; font-size:10px; color:#8682a0; cursor:pointer; position:relative; }
+
+    .mnav { display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 0; font-size:10px; color:#8682a0; cursor:pointer; transition:color .2s; }
     .mnav.active { color:#9333ea; }
-    .card { background:white; border:1px solid #e8e6ef; border-radius:16px; }
-    .dark .card { background:#23203c; border-color:#3d3a54; }
-    .kpi-card { background:white; border:1px solid #e8e6ef; border-radius:14px; padding:16px; transition:all .2s; }
-    .kpi-card:hover { border-color:#d8b4fe; box-shadow:0 4px 20px -6px rgba(147,51,234,.15); }
-    .dark .kpi-card { background:#23203c; border-color:#3d3a54; }
-    .dark .kpi-card:hover { border-color:#7e22ce; }
-    .kpi-label { font-size:12px; color:#8682a0; margin-bottom:6px; font-weight:500; }
-    .kpi-value { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#23203c; }
+
+    .app-card { background:white; border:1px solid #eae8f2; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+    .dark .app-card { background:#1e1b34; border-color:#2d2a48; box-shadow:0 4px 20px -4px rgba(0,0,0,.3); }
+
+    .kpi-card { background:white; border:1px solid #eae8f2; border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:all .25s; }
+    .kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#9333ea,#c084fc); opacity:0; transition:opacity .25s; }
+    .kpi-card:hover { transform:translateY(-2px); box-shadow:0 8px 30px -8px rgba(147,51,234,.2); border-color:#d8b4fe; }
+    .kpi-card:hover::before { opacity:1; }
+    .dark .kpi-card { background:#1e1b34; border-color:#2d2a48; }
+    .dark .kpi-card:hover { box-shadow:0 8px 30px -8px rgba(147,51,234,.25); border-color:#6b21a8; }
+    .kpi-label { font-size:12px; color:#8682a0; margin-bottom:8px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+    .kpi-value { font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; color:#2d2a45; line-height:1; }
     .dark .kpi-value { color:#f3f2f7; }
-    .kpi-sub { font-size:11px; color:#a9a6b8; margin-top:3px; }
+    .kpi-sub { font-size:11px; color:#a9a6b8; margin-top:6px; }
+
     table { border-collapse:collapse; width:100%; }
-    th { text-align:left; padding:10px 14px; font-size:11px; color:#8682a0; text-transform:uppercase; letter-spacing:.6px; background:#fafaff; border-bottom:1px solid #e8e6ef; font-weight:600; }
-    .dark th { background:#2d2a45; border-color:#3d3a54; color:#a9a6b8; }
-    td { padding:10px 14px; font-size:13px; border-bottom:1px solid #f3f2f7; }
-    .dark td { border-color:#3d3a54; }
-    tr:hover td { background:#faf5ff; }
-    .dark tr:hover td { background:rgba(147,51,234,.05); }
-    .status-on { background:#f0fdf4; color:#15803d; padding:4px 12px; border-radius:8px; font-size:11px; font-weight:600; }
-    .status-off { background:#fef2f2; color:#dc2626; padding:4px 12px; border-radius:8px; font-size:11px; font-weight:600; }
-    .status-pause { background:#fefce8; color:#ca8a04; padding:4px 12px; border-radius:8px; font-size:11px; font-weight:600; }
-    .chip { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #e8e6ef; background:white; color:#5c5878; transition:all .2s; }
-    .chip.active { background:#9333ea; color:white; border-color:#9333ea; }
-    .dark .chip { background:#2d2a45; border-color:#3d3a54; color:#a9a6b8; }
-    .dark .chip.active { background:#7e22ce; border-color:#7e22ce; color:white; }
-    .toggle-track { width:44px; height:24px; border-radius:12px; cursor:pointer; transition:background .3s; position:relative; }
-    .toggle-track.light { background:#e8e6ef; }
-    .toggle-track.dark-mode { background:#7e22ce; }
-    .toggle-thumb { width:20px; height:20px; border-radius:50%; background:white; position:absolute; top:2px; box-shadow:0 1px 4px rgba(0,0,0,.15); transition:transform .3s; }
-    .toggle-track.light .toggle-thumb { left:2px; }
-    .toggle-track.dark-mode .toggle-thumb { left:22px; }
+    th { text-align:left; padding:12px 16px; font-size:11px; color:#8682a0; text-transform:uppercase; letter-spacing:.7px; background:#f8f6fd; border-bottom:1px solid #eae8f2; font-weight:700; }
+    .dark th { background:#1e1b34; border-color:#2d2a48; color:#a9a6b8; }
+    td { padding:12px 16px; font-size:13px; border-bottom:1px solid #f3f1f8; }
+    .dark td { border-color:#2d2a48; }
+    tr:hover td { background:#faf8ff; }
+    .dark tr:hover td { background:rgba(147,51,234,.06); }
+
+    .chip { display:inline-flex; align-items:center; gap:5px; padding:8px 16px; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #eae8f2; background:white; color:#5c5878; transition:all .2s; }
+    .chip.active { background:linear-gradient(135deg,#9333ea,#7e22ce); color:white; border-color:transparent; box-shadow:0 4px 12px -2px rgba(147,51,234,.35); }
+    .dark .chip { background:#1e1b34; border-color:#2d2a48; color:#a9a6b8; }
+    .dark .chip.active { background:linear-gradient(135deg,#7e22ce,#6b21a8); border-color:transparent; box-shadow:0 4px 12px -2px rgba(147,51,234,.4); }
+
+    .toggle-btn { width:48px; height:26px; border-radius:13px; cursor:pointer; position:relative; background:linear-gradient(135deg,#9333ea,#7e22ce); box-shadow:0 2px 8px rgba(147,51,234,.3); transition:background .3s; }
+    .toggle-btn.light-mode { background:#d5d3de; box-shadow:0 2px 8px rgba(0,0,0,.1); }
+    .toggle-knob { width:20px; height:20px; border-radius:50%; background:white; position:absolute; top:3px; left:25px; box-shadow:0 2px 6px rgba(0,0,0,.15); transition:left .3s cubic-bezier(.4,0,.2,1); display:flex; align-items:center; justify-content:center; }
+    .toggle-btn.light-mode .toggle-knob { left:3px; }
+
+    .header-wrap { background:rgba(255,255,255,.85); backdrop-filter:blur(20px); border-bottom:1px solid #eae8f2; }
+    .dark .header-wrap { background:rgba(19,17,28,.85); border-color:#2d2a48; }
+
     @media(max-width:1024px) {
       #sidebar { display:none !important; }
       #appMain { margin-left:0 !important; }
     }
   </style>
 </head>
-<body class="bg-surface-50 text-ink-600 antialiased transition-colors duration-300">
+<body>
 
-<div id="loadingScreen" class="min-h-screen flex items-center justify-center bg-surface-50">
-  <div class="flex items-center gap-3 text-ink-300 text-[14px]"><i class="ti ti-loader-2 animate-spin text-xl"></i> Загрузка…</div>
+<div id="loadingScreen" class="min-h-screen flex items-center justify-center" style="background:#f5f3fa">
+  <div class="flex items-center gap-3 text-[14px]" style="color:#8682a0"><i class="ti ti-loader-2 animate-spin text-xl"></i> Загрузка…</div>
 </div>
 
 <div id="app" class="hidden">
 <div class="flex min-h-screen">
 
-  <aside id="sidebar" class="w-64 shrink-0 bg-white border-r border-surface-200 hidden lg:flex flex-col fixed h-screen z-20 transition-colors duration-300">
-    <div onclick="go('dashboard')" class="h-16 px-5 flex items-center gap-2.5 border-b border-surface-200 cursor-pointer hover:bg-surface-50 transition">
-      <div class="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold text-lg shrink-0">b</div>
-      <div><div class="font-bold text-[15px] leading-tight">bid<span class="text-brand-600">RR</span></div><div class="text-[11px] text-ink-300">автобиддер WB</div></div>
+  <aside id="sidebar" class="sidebar-wrap w-64 shrink-0 hidden lg:flex flex-col fixed h-screen z-20">
+    <div onclick="go('dashboard')" class="h-16 px-5 flex items-center gap-2.5 cursor-pointer transition-colors" style="border-bottom:1px solid #eae8f2">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:linear-gradient(135deg,#9333ea,#7e22ce)">b</div>
+      <div><div class="font-bold text-[15px] leading-tight">bid<span style="color:#9333ea">RR</span></div><div class="text-[11px]" style="color:#a9a6b8">автобиддер WB</div></div>
     </div>
     <nav class="flex-1 px-3 py-4 space-y-1 text-[14px] overflow-y-auto">
-      <a onclick="go('dashboard')" id="nav-dashboard" class="navitem active flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-layout-dashboard text-lg shrink-0"></i><span>Обзор</span></a>
-      <a onclick="go('campaigns')" id="nav-campaigns" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-rocket text-lg shrink-0"></i><span>Кампании</span></a>
-      <a onclick="go('intervals')" id="nav-intervals" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-clock-hour-4 text-lg shrink-0"></i><span>Интервалы</span></a>
-      <a onclick="go('subscription')" id="nav-subscription" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-crown text-lg shrink-0"></i><span>Подписка</span></a>
-      <a onclick="go('connect')" id="nav-connect" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-plug text-lg shrink-0"></i><span>Подключить кабинет</span></a>
-      <a onclick="go('cabinets')" id="nav-cabinets" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer font-medium"><i class="ti ti-building-store text-lg shrink-0"></i><span>Кабинеты</span></a>
+      <a onclick="go('dashboard')" id="nav-dashboard" class="navitem active flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-layout-dashboard text-lg shrink-0"></i><span>Обзор</span></a>
+      <a onclick="go('campaigns')" id="nav-campaigns" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-rocket text-lg shrink-0"></i><span>Кампании</span></a>
+      <a onclick="go('intervals')" id="nav-intervals" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-clock-hour-4 text-lg shrink-0"></i><span>Интервалы</span></a>
+      <a onclick="go('subscription')" id="nav-subscription" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-crown text-lg shrink-0"></i><span>Подписка</span></a>
+      <a onclick="go('connect')" id="nav-connect" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-plug text-lg shrink-0"></i><span>Подключить кабинет</span></a>
+      <a onclick="go('cabinets')" id="nav-cabinets" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-building-store text-lg shrink-0"></i><span>Кабинеты</span></a>
     </nav>
-    <div class="px-4 pb-4 space-y-2">
-      <div class="bg-brand-50 rounded-xl p-3 text-[12px] cursor-pointer hover:bg-brand-100 transition" onclick="go('subscription')">
-        <div class="font-semibold text-brand-700 flex items-center gap-1.5"><i class="ti ti-clock-hour-4"></i>Подписка</div>
-        <div class="text-ink-300 mt-1">7 дней бесплатно</div>
+    <div class="px-4 pb-4">
+      <div class="rounded-xl p-3 text-[12px] cursor-pointer transition-all" style="background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #e9d5ff" onclick="go('subscription')">
+        <div class="font-bold flex items-center gap-1.5" style="color:#7e22ce"><i class="ti ti-clock-hour-4"></i>Подписка</div>
+        <div style="color:#8682a0" class="mt-1">7 дней бесплатно</div>
       </div>
     </div>
   </aside>
 
-  <main id="appMain" class="flex-1 min-w-0 lg:ml-64 pb-20 lg:pb-0 transition-colors duration-300">
-    <header class="h-16 bg-white/80 backdrop-blur border-b border-surface-200 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-10 transition-colors duration-300">
+  <main id="appMain" class="flex-1 min-w-0 lg:ml-64 pb-20 lg:pb-0">
+    <header class="header-wrap h-16 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-10">
       <div class="flex items-center gap-2.5">
-        <div onclick="go('dashboard')" class="w-8 h-8 rounded-lg bg-brand-600 lg:hidden flex items-center justify-center text-white font-bold cursor-pointer">b</div>
-        <div id="crumb" class="text-[15px] font-semibold text-ink-600">Обзор</div>
+        <div onclick="go('dashboard')" class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold cursor-pointer lg:hidden" style="background:linear-gradient(135deg,#9333ea,#7e22ce)">b</div>
+        <div id="crumb" class="text-[15px] font-bold text-ink-600">Обзор</div>
       </div>
       <div class="flex items-center gap-3">
-        <div id="themeToggle" onclick="toggleTheme()" class="toggle-track light" title="Дневной/Ночной режим">
-          <div class="toggle-thumb flex items-center justify-center">
-            <i class="ti ti-sun text-[10px] text-amber-500 absolute" style="left:3px;top:3px"></i>
-            <i class="ti ti-moon text-[10px] text-brand-700 absolute hidden" style="left:23px;top:3px"></i>
+        <div id="themeToggle" onclick="toggleTheme()" class="toggle-btn" title="Дневной/Ночной режим">
+          <div class="toggle-knob">
+            <i class="ti ti-moon text-[10px]" style="color:#9333ea"></i>
           </div>
         </div>
-        <a href="index.html#lead" class="hidden sm:flex items-center gap-2 text-[13px] bg-good-50 text-good-700 hover:bg-good-100 px-3 py-1.5 rounded-full font-medium transition-colors"><i class="ti ti-headset"></i>Поддержка</a>
-        <span id="userEmail" class="text-ink-300 text-[13px] hidden md:inline font-medium"></span>
-        <div id="userInitials" class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-[13px]">—</div>
-        <button onclick="doLogout()" class="w-9 h-9 rounded-full hover:bg-surface-100 flex items-center justify-center text-ink-300 transition-colors"><i class="ti ti-logout text-lg"></i></button>
+        <a href="index.html#lead" class="hidden sm:flex items-center gap-2 text-[13px] px-3 py-1.5 rounded-full font-semibold transition-all" style="background:#f0fdf4;color:#15803d"><i class="ti ti-headset"></i>Поддержка</a>
+        <span id="userEmail" class="text-[13px] hidden md:inline font-semibold" style="color:#8682a0"></span>
+        <div id="userInitials" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-[13px] text-white" style="background:linear-gradient(135deg,#9333ea,#7e22ce)">—</div>
+        <button onclick="doLogout()" class="w-9 h-9 rounded-full flex items-center justify-center transition-colors" style="color:#8682a0" onmouseover="this.style.background='#f3e8ff'" onmouseout="this.style.background='transparent'"><i class="ti ti-logout text-lg"></i></button>
       </div>
     </header>
 
     <div class="p-4 lg:p-8">
 
       <section id="dashboard" class="screen active">
-        <h1 class="text-2xl font-bold mb-1">Обзор</h1>
-        <p class="text-ink-300 text-[14px]">Сводная статистика по рекламе</p>
+        <h1 class="text-2xl font-extrabold mb-1">Обзор</h1>
+        <p style="color:#8682a0" class="text-[14px]">Сводная статистика по рекламе</p>
 
-        <div id="dashChips" class="flex gap-2 mt-4 mb-5 flex-wrap">
+        <div class="flex gap-2 mt-4 mb-5 flex-wrap">
           <span class="chip active">Все кабинеты</span>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
           <div class="kpi-card"><div class="kpi-label">Расход</div><div class="kpi-value">0 ₽</div><div class="kpi-sub">за период</div></div>
           <div class="kpi-card"><div class="kpi-label">Заказы</div><div class="kpi-value">0</div><div class="kpi-sub">шт.</div></div>
-          <div class="kpi-card"><div class="kpi-label">ДРР</div><div class="kpi-value text-brand-600">—</div><div class="kpi-sub">цель: &lt;15%</div></div>
-          <div class="kpi-card"><div class="kpi-label">Экономия</div><div class="kpi-value text-good-600">0 ₽</div><div class="kpi-sub">благодаря биддеру</div></div>
+          <div class="kpi-card"><div class="kpi-label">ДРР</div><div class="kpi-value" style="color:#9333ea">—</div><div class="kpi-sub">цель: &lt;15%</div></div>
+          <div class="kpi-card"><div class="kpi-label">Экономия</div><div class="kpi-value" style="color:#16a34a">0 ₽</div><div class="kpi-sub">благодаря биддеру</div></div>
           <div class="kpi-card"><div class="kpi-label">Просмотры</div><div class="kpi-value">0</div><div class="kpi-sub">показов</div></div>
           <div class="kpi-card"><div class="kpi-label">Клики</div><div class="kpi-value">0</div><div class="kpi-sub">CTR —</div></div>
         </div>
 
-        <div class="card mb-6 overflow-hidden">
-          <div class="px-5 py-3 border-b border-surface-200 flex items-center justify-between">
-            <div class="inline-flex items-center gap-1 p-1 rounded-xl bg-surface-100 text-[13px]">
-              <button class="px-3.5 py-1.5 rounded-lg font-semibold bg-white shadow text-brand-600">По кампаниям</button>
-              <button class="px-3.5 py-1.5 rounded-lg font-semibold text-ink-300">По дням</button>
+        <div class="app-card overflow-hidden">
+          <div class="px-5 py-3 flex items-center justify-between" style="border-bottom:1px solid #eae8f2">
+            <div class="inline-flex items-center gap-1 p-1 rounded-xl text-[13px]" style="background:#f3f1f8">
+              <button class="px-3.5 py-1.5 rounded-lg font-bold text-white" style="background:linear-gradient(135deg,#9333ea,#7e22ce);box-shadow:0 2px 8px rgba(147,51,234,.3)">По кампаниям</button>
+              <button class="px-3.5 py-1.5 rounded-lg font-semibold" style="color:#8682a0">По дням</button>
             </div>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-[13px] min-w-[800px]">
               <thead><tr>
-                <th class="font-semibold">Кампания</th>
-                <th class="font-semibold">Статус</th>
-                <th class="font-semibold">Настройки</th>
-                <th class="font-semibold text-right">Бюджет</th>
-                <th class="font-semibold text-right">Расход</th>
-                <th class="font-semibold text-right">Просмотры</th>
-                <th class="font-semibold text-right">Заказы</th>
+                <th class="font-bold">Кампания</th>
+                <th class="font-bold">Статус</th>
+                <th class="font-bold">Настройки</th>
+                <th class="font-bold text-right">Бюджет</th>
+                <th class="font-bold text-right">Расход</th>
+                <th class="font-bold text-right">Просмотры</th>
+                <th class="font-bold text-right">Заказы</th>
               </tr></thead>
-              <tbody id="dashTableBody">
-                <tr><td colspan="7" class="text-center py-12 text-ink-200"><i class="ti ti-inbox text-4xl mb-3 block"></i><span class="text-[14px]">Подключите кабинет, чтобы увидеть статистику</span></td></tr>
+              <tbody>
+                <tr><td colspan="7" class="text-center py-14" style="color:#cfcce0"><i class="ti ti-inbox text-5xl mb-3 block" style="color:#d8b4fe"></i><span class="text-[14px] font-semibold">Подключите кабинет, чтобы увидеть статистику</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -202,7 +218,7 @@
 
       <section id="campaigns" class="screen">
         <div class="flex items-center justify-between mb-4">
-          <div><h1 class="text-2xl font-bold">Кампании</h1><p class="text-ink-300 text-[14px] mt-1">Управление рекламными кампаниями</p></div>
+          <div><h1 class="text-2xl font-extrabold">Кампании</h1><p class="text-[14px] mt-1" style="color:#8682a0">Управление рекламными кампаниями</p></div>
         </div>
         <div class="flex items-center gap-2 mb-4 flex-wrap">
           <span class="chip active">Все</span>
@@ -210,22 +226,22 @@
           <span class="chip">На паузе</span>
           <span class="chip">Архив</span>
         </div>
-        <div class="card overflow-hidden">
+        <div class="app-card overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-[13px] min-w-[880px]">
               <thead><tr>
-                <th class="py-3 pl-4 w-10"><input type="checkbox" class="accent-brand-600"></th>
-                <th class="font-semibold">Кампания</th>
-                <th class="font-semibold">Статус</th>
-                <th class="font-semibold">Настройки</th>
-                <th class="font-semibold text-right">Бюджет</th>
-                <th class="font-semibold text-right">Расход</th>
-                <th class="font-semibold text-right">Просмотры</th>
-                <th class="font-semibold text-right">Заказы</th>
-                <th class="font-semibold text-right pr-3">ДРР</th>
+                <th class="py-3 pl-4 w-10"><input type="checkbox" class="accent-purple-600"></th>
+                <th class="font-bold">Кампания</th>
+                <th class="font-bold">Статус</th>
+                <th class="font-bold">Настройки</th>
+                <th class="font-bold text-right">Бюджет</th>
+                <th class="font-bold text-right">Расход</th>
+                <th class="font-bold text-right">Просмотры</th>
+                <th class="font-bold text-right">Заказы</th>
+                <th class="font-bold text-right pr-3">ДРР</th>
               </tr></thead>
-              <tbody id="campRows">
-                <tr><td colspan="9" class="text-center py-12 text-ink-200"><i class="ti ti-inbox text-4xl mb-3 block"></i><span class="text-[14px]">Подключите кабинет для просмотра кампаний</span></td></tr>
+              <tbody>
+                <tr><td colspan="9" class="text-center py-14" style="color:#cfcce0"><i class="ti ti-inbox text-5xl mb-3 block" style="color:#d8b4fe"></i><span class="text-[14px] font-semibold">Подключите кабинет для просмотра кампаний</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -234,23 +250,23 @@
 
       <section id="intervals" class="screen">
         <div class="flex items-center justify-between gap-3 mb-4">
-          <div><h1 class="text-2xl font-bold">Интервалы</h1><p class="text-ink-300 text-[14px] mt-1">Время показа рекламных кампаний</p></div>
-          <button class="bg-brand-600 hover:bg-brand-700 text-white text-[14px] font-semibold px-5 py-2.5 rounded-xl flex items-center gap-2 whitespace-nowrap transition-colors"><i class="ti ti-plus"></i><span class="hidden sm:inline">Создать интервал</span></button>
+          <div><h1 class="text-2xl font-extrabold">Интервалы</h1><p class="text-[14px] mt-1" style="color:#8682a0">Время показа рекламных кампаний</p></div>
+          <button class="text-white text-[14px] font-semibold px-5 py-2.5 rounded-xl flex items-center gap-2 whitespace-nowrap transition-all" style="background:linear-gradient(135deg,#9333ea,#7e22ce);box-shadow:0 4px 15px rgba(147,51,234,.3)"><i class="ti ti-plus"></i><span class="hidden sm:inline">Создать интервал</span></button>
         </div>
-        <div class="card overflow-hidden">
+        <div class="app-card overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-[13px] min-w-[800px]">
               <thead><tr>
-                <th class="py-2.5 pl-4 w-10"><input type="checkbox" class="accent-brand-600"></th>
-                <th class="font-semibold">Кампания</th>
-                <th class="font-semibold">Кабинет</th>
-                <th class="font-semibold">Статус</th>
-                <th class="font-semibold">Интервал</th>
-                <th class="font-semibold text-right">Бюджет</th>
-                <th class="font-semibold"></th>
+                <th class="py-2.5 pl-4 w-10"><input type="checkbox" class="accent-purple-600"></th>
+                <th class="font-bold">Кампания</th>
+                <th class="font-bold">Кабинет</th>
+                <th class="font-bold">Статус</th>
+                <th class="font-bold">Интервал</th>
+                <th class="font-bold text-right">Бюджет</th>
+                <th class="font-bold"></th>
               </tr></thead>
               <tbody>
-                <tr><td colspan="7" class="text-center py-12 text-ink-200"><i class="ti ti-inbox text-4xl mb-3 block"></i><span class="text-[14px]">Нет интервалов</span></td></tr>
+                <tr><td colspan="7" class="text-center py-14" style="color:#cfcce0"><i class="ti ti-inbox text-5xl mb-3 block" style="color:#d8b4fe"></i><span class="text-[14px] font-semibold">Нет интервалов</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -258,50 +274,50 @@
       </section>
 
       <section id="subscription" class="screen">
-        <h1 class="text-2xl font-bold mb-1">Подписка</h1>
-        <p class="text-ink-300 text-[14px] mb-4">Платите только за РК, добавленные в сервис. Первая РК бесплатна.</p>
+        <h1 class="text-2xl font-extrabold mb-1">Подписка</h1>
+        <p class="text-[14px] mb-4" style="color:#8682a0">Платите только за РК, добавленные в сервис. Первая РК бесплатна.</p>
         <div class="grid lg:grid-cols-[1fr_minmax(320px,360px)] gap-4 items-start">
           <div class="space-y-4 min-w-0">
-            <div class="card p-5">
+            <div class="app-card p-5">
               <div class="flex items-baseline justify-between mb-3">
-                <span class="text-[14px] font-semibold">Срок подписки</span>
-                <span class="text-[12px] text-ink-300">дольше — выгоднее</span>
+                <span class="text-[14px] font-bold">Срок подписки</span>
+                <span class="text-[12px]" style="color:#a9a6b8">дольше — выгоднее</span>
               </div>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button class="border-2 border-brand-600 bg-brand-50 text-brand-700 rounded-xl px-3 py-3 text-center font-semibold text-[13px]">1 мес</button>
-                <button class="border border-surface-200 rounded-xl px-3 py-3 text-center font-semibold text-[13px] hover:border-brand-300 transition-colors">3 мес <span class="text-[11px] text-good-600">-10%</span></button>
-                <button class="border border-surface-200 rounded-xl px-3 py-3 text-center font-semibold text-[13px] hover:border-brand-300 transition-colors">6 мес <span class="text-[11px] text-good-600">-20%</span></button>
-                <button class="border border-surface-200 rounded-xl px-3 py-3 text-center font-semibold text-[13px] hover:border-brand-300 transition-colors">12 мес <span class="text-[11px] text-good-600">-30%</span></button>
+                <button class="rounded-xl px-3 py-3 text-center font-bold text-[13px] transition-all" style="border:2px solid #9333ea;background:linear-gradient(135deg,#faf5ff,#f3e8ff);color:#7e22ce">1 мес</button>
+                <button class="rounded-xl px-3 py-3 text-center font-bold text-[13px] transition-all" style="border:1px solid #eae8f2" onmouseover="this.style.borderColor='#d8b4fe'" onmouseout="this.style.borderColor='#eae8f2'">3 мес <span style="color:#16a34a" class="text-[11px]">-10%</span></button>
+                <button class="rounded-xl px-3 py-3 text-center font-bold text-[13px] transition-all" style="border:1px solid #eae8f2" onmouseover="this.style.borderColor='#d8b4fe'" onmouseout="this.style.borderColor='#eae8f2'">6 мес <span style="color:#16a34a" class="text-[11px]">-20%</span></button>
+                <button class="rounded-xl px-3 py-3 text-center font-bold text-[13px] transition-all" style="border:1px solid #eae8f2" onmouseover="this.style.borderColor='#d8b4fe'" onmouseout="this.style.borderColor='#eae8f2'">12 мес <span style="color:#16a34a" class="text-[11px]">-30%</span></button>
               </div>
             </div>
-            <div class="card p-5">
-              <div class="text-[14px] font-semibold mb-1">Тариф</div>
-              <p class="text-[12px] text-ink-300 leading-relaxed mb-3">Оплата по числу подключённых РК. Чем больше РК, тем дешевле каждая.</p>
-              <div class="divide-y divide-surface-200">
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">1 РК</span><span class="font-bold text-good-600">Бесплатно</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">2–5 РК</span><span class="font-bold">290 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">6–20 РК</span><span class="font-bold">240 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">21–50 РК</span><span class="font-bold">190 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">51–100 РК</span><span class="font-bold">150 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span class="text-ink-300">100+ РК</span><span class="font-bold">15 990 ₽/мес</span></div>
+            <div class="app-card p-5">
+              <div class="text-[14px] font-bold mb-1">Тариф</div>
+              <p class="text-[12px] leading-relaxed mb-3" style="color:#8682a0">Оплата по числу подключённых РК. Чем больше РК, тем дешевле каждая.</p>
+              <div style="border-top:1px solid #eae8f2">
+                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">1 РК</span><span class="font-bold" style="color:#16a34a">Бесплатно</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">2–5 РК</span><span class="font-bold">290 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">6–20 РК</span><span class="font-bold">240 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">21–50 РК</span><span class="font-bold">190 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">51–100 РК</span><span class="font-bold">150 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-3 text-[13px]"><span style="color:#a9a6b8">100+ РК</span><span class="font-bold">15 990 ₽/мес</span></div>
               </div>
             </div>
           </div>
-          <div class="card p-5 lg:sticky lg:top-4">
-            <div class="text-[13px] font-semibold mb-3">К оплате</div>
+          <div class="app-card p-5 lg:sticky lg:top-4">
+            <div class="text-[13px] font-bold mb-3">К оплате</div>
             <div class="space-y-2 text-[13px]">
-              <div class="flex justify-between"><span class="text-ink-300">Подключённых РК</span><span class="font-semibold">0</span></div>
-              <div class="flex justify-between"><span class="text-ink-300">Срок</span><span class="font-semibold">1 мес</span></div>
+              <div class="flex justify-between"><span style="color:#a9a6b8">Подключённых РК</span><span class="font-bold">0</span></div>
+              <div class="flex justify-between"><span style="color:#a9a6b8">Срок</span><span class="font-bold">1 мес</span></div>
             </div>
-            <div class="border-t border-surface-200 mt-3 pt-3">
+            <div style="border-top:1px solid #eae8f2" class="mt-3 pt-3">
               <div class="flex items-end justify-between gap-3">
-                <span class="text-[14px] font-medium text-ink-300">Итого</span>
+                <span class="text-[14px] font-medium" style="color:#a9a6b8">Итого</span>
                 <div class="text-right">
-                  <div class="text-[28px] leading-none font-extrabold text-brand-600 tracking-tight">0 ₽</div>
-                  <div class="text-[12px] text-ink-300 mt-1">/мес</div>
+                  <div class="text-[28px] leading-none font-extrabold tracking-tight" style="color:#9333ea;font-family:'Space Grotesk',sans-serif">0 ₽</div>
+                  <div class="text-[12px] mt-1" style="color:#a9a6b8">/мес</div>
                 </div>
               </div>
-              <button class="w-full mt-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors"><i class="ti ti-qrcode text-[18px]"></i>Оплатить</button>
+              <button class="w-full mt-4 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all" style="background:linear-gradient(135deg,#9333ea,#7e22ce);box-shadow:0 4px 20px rgba(147,51,234,.35)"><i class="ti ti-qrcode text-[18px]"></i>Оплатить</button>
             </div>
           </div>
         </div>
@@ -310,36 +326,34 @@
       <section id="connect" class="screen">
         <div class="max-w-[640px] mx-auto pt-4">
           <div class="text-center mb-6">
-            <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 text-3xl flex items-center justify-center mx-auto mb-3"><i class="ti ti-plug-connected"></i></div>
-            <h1 class="text-2xl font-bold">Подключите кабинет WB</h1>
-            <p class="text-ink-300 text-[14px] mt-1">Вставьте API-ключ Wildberries для подключения</p>
+            <div class="w-14 h-14 rounded-2xl text-3xl flex items-center justify-center mx-auto mb-3" style="background:linear-gradient(135deg,#f3e8ff,#e9d5ff);color:#9333ea"><i class="ti ti-plug-connected"></i></div>
+            <h1 class="text-2xl font-extrabold">Подключите кабинет WB</h1>
+            <p class="text-[14px] mt-1" style="color:#8682a0">Вставьте API-ключ Wildberries для подключения</p>
           </div>
-          <div class="card p-6">
-            <div class="text-[13px] font-semibold mb-1">API-ключ Wildberries <span class="text-ink-300 font-normal">· Настройки → Доступ к API</span></div>
+          <div class="app-card p-6">
+            <div class="text-[13px] font-bold mb-1">API-ключ Wildberries <span style="color:#a9a6b8" class="font-normal">· Настройки → Доступ к API</span></div>
             <div class="flex gap-2 mt-1">
-              <input class="flex-1 border border-surface-200 rounded-xl px-3 py-2.5 text-[14px] font-mono focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all" placeholder="Вставьте API-ключ">
-              <button class="bg-brand-600 hover:bg-brand-700 text-white px-5 rounded-xl text-[14px] font-semibold transition-colors">Подключить</button>
+              <input class="flex-1 rounded-xl px-3 py-2.5 text-[14px] font-mono focus:outline-none transition-all" style="border:1px solid #eae8f2" onfocus="this.style.boxShadow='0 0 0 2px rgba(147,51,234,.2)';this.style.borderColor='#d8b4fe'" onblur="this.style.boxShadow='';this.style.borderColor='#eae8f2'" placeholder="Вставьте API-ключ">
+              <button class="text-white px-5 rounded-xl text-[14px] font-bold transition-all" style="background:linear-gradient(135deg,#9333ea,#7e22ce);box-shadow:0 4px 15px rgba(147,51,234,.3)">Подключить</button>
             </div>
-            <div class="text-[12px] text-ink-300 mt-2 flex items-center gap-1.5"><i class="ti ti-shield-lock"></i>Ключ хранится в зашифрованном виде</div>
-            <button class="inline-flex items-center gap-1.5 text-[12px] text-brand-600 hover:text-brand-700 font-semibold mt-3 transition-colors"><i class="ti ti-book"></i>Как создать API-ключ</button>
+            <div class="text-[12px] mt-2 flex items-center gap-1.5" style="color:#a9a6b8"><i class="ti ti-shield-lock"></i>Ключ хранится в зашифрованном виде</div>
+            <button class="inline-flex items-center gap-1.5 text-[12px] font-bold mt-3 transition-colors" style="color:#9333ea" onmouseover="this.style.color='#7e22ce'" onmouseout="this.style.color='#9333ea'"><i class="ti ti-book"></i>Как создать API-ключ</button>
           </div>
         </div>
       </section>
 
       <section id="cabinets" class="screen">
         <div class="flex items-center justify-between mb-5">
-          <div><h1 class="text-2xl font-bold">Кабинеты</h1><p class="text-ink-300 text-[14px] mt-0.5">Подключённые кабинеты WB</p></div>
-          <button onclick="go('connect')" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl text-[14px] font-semibold flex items-center gap-1.5 whitespace-nowrap transition-colors"><i class="ti ti-plus"></i>Подключить</button>
+          <div><h1 class="text-2xl font-extrabold">Кабинеты</h1><p class="text-[14px] mt-0.5" style="color:#8682a0">Подключённые кабинеты WB</p></div>
+          <button onclick="go('connect')" class="text-white px-5 py-2.5 rounded-xl text-[14px] font-bold flex items-center gap-1.5 whitespace-nowrap transition-all" style="background:linear-gradient(135deg,#9333ea,#7e22ce);box-shadow:0 4px 15px rgba(147,51,234,.3)"><i class="ti ti-plus"></i>Подключить</button>
         </div>
-        <div class="grid gap-3">
-          <div class="card p-8 text-center text-ink-200"><i class="ti ti-building-store text-5xl mb-3 block"></i><span class="text-[14px]">Нет подключённых кабинетов</span></div>
-        </div>
+        <div class="app-card p-8 text-center" style="color:#cfcce0"><i class="ti ti-building-store text-5xl mb-3 block" style="color:#d8b4fe"></i><span class="text-[14px] font-semibold">Нет подключённых кабинетов</span></div>
       </section>
 
     </div>
   </main>
 
-  <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-surface-200 grid grid-cols-5 transition-colors duration-300">
+  <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 grid grid-cols-5" style="background:white;border-top:1px solid #eae8f2">
     <a onclick="go('dashboard')" id="mnav-dashboard" class="mnav active"><i class="ti ti-layout-dashboard text-xl"></i><span>Обзор</span></a>
     <a onclick="go('campaigns')" id="mnav-campaigns" class="mnav"><i class="ti ti-rocket text-xl"></i><span>РК</span></a>
     <a onclick="go('intervals')" id="mnav-intervals" class="mnav"><i class="ti ti-clock-hour-4 text-xl"></i><span>Интервалы</span></a>
@@ -352,22 +366,25 @@
 
 <script>
 let darkMode = localStorage.getItem('darkMode') === 'true';
-if (darkMode) document.documentElement.classList.add('dark');
+if (darkMode) { document.documentElement.classList.add('dark'); document.body.classList.add('dark'); }
 
 function toggleTheme() {
   darkMode = !darkMode;
   localStorage.setItem('darkMode', darkMode);
   document.documentElement.classList.toggle('dark', darkMode);
-  const track = document.getElementById('themeToggle');
-  track.classList.toggle('light', !darkMode);
-  track.classList.toggle('dark-mode', darkMode);
-  track.querySelector('.ti-sun').classList.toggle('hidden', darkMode);
-  track.querySelector('.ti-moon').classList.toggle('hidden', !darkMode);
-  document.querySelectorAll('#sidebar,#appMain,header,.card,.kpi-card,th,td,.chip,.mnav').forEach(el => el.classList.add('transition-colors','duration-300'));
-  document.body.classList.toggle('bg-surface-50', !darkMode);
-  document.body.classList.toggle('bg-ink-600', darkMode);
-  document.body.classList.toggle('text-ink-600', !darkMode);
-  document.body.classList.toggle('text-white', darkMode);
+  document.body.classList.toggle('dark', darkMode);
+  const btn = document.getElementById('themeToggle');
+  const knob = btn.querySelector('.toggle-knob');
+  const icon = knob.querySelector('i');
+  if (darkMode) {
+    btn.classList.remove('light-mode');
+    knob.querySelector('i').className = 'ti ti-sun text-[10px]';
+    knob.querySelector('i').style.color = '#eab308';
+  } else {
+    btn.classList.add('light-mode');
+    knob.querySelector('i').className = 'ti ti-moon text-[10px]';
+    knob.querySelector('i').style.color = '#9333ea';
+  }
 }
 
 const pages = ['dashboard','campaigns','intervals','subscription','connect','cabinets'];
