@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>bidRR — кабинет</title>
-  <meta name="robots" content="noindex" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -16,13 +16,17 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50:'#faf5ff',100:'#f3e8ff',200:'#e9d5ff',300:'#d8b4fe',400:'#c084fc',500:'#a855f7',600:'#9333ea',700:'#7e22ce',800:'#6b21a8',900:'#581c87' },
-            surface: { 50:'#fafaff',100:'#f0eef7',200:'#e4e1ef',300:'#d5d3de' },
-            ink: { 50:'#f8f7fa',100:'#cfcce0',200:'#a9a6b8',300:'#8682a0',400:'#5c5878',500:'#3d3a54',600:'#23203c' },
-            good: { 50:'#f0fdf4',600:'#16a34a',700:'#15803d' },
-            warn: { 600:'#eab308',700:'#ca8a04' }
+            mm: { black:'#0a0a0a', dark:'#1b1b1b', darkLight:'#242628', grayDark:'#393d46', gray:'#c8ceda', grayMid:'#a1a8b7', grayLight:'#e9edf6', whiteOff:'#f7f9fc', white:'#fff',
+              orange:'#ff5c16', orangeLight:'#ffa680', orangeBg:'#fff1eb',
+              purple:'#d075ff', purpleLight:'#eac2ff', purpleDark:'#3d065f', purpleBg:'#f5e6ff',
+              green:'#baf24a', greenLight:'#e5ffc3', greenDark:'#013330',
+              blue:'#89b0ff', blueLight:'#cce7ff', blueDark:'#190066' },
+            brand: { 50:'#f0f4ff',100:'#dbe4ff',200:'#bac8ff',300:'#91a7ff',400:'#748ffc',500:'#5c7cfa',600:'#4c6ef5',700:'#4263eb',800:'#3b5bdb',900:'#364fc7' },
+            surface: { 50:'#fafbff',100:'#f1f3f5',200:'#e9ecef',300:'#dee2e6' },
+            ink: { 50:'#f8f9fa',100:'#ced4da',200:'#adb5bd',300:'#868e96',400:'#495057',500:'#343a40',600:'#212529' },
           },
-          fontFamily: { sans:['Plus Jakarta Sans','sans-serif'], display:['Space Grotesk','sans-serif'] }
+          fontFamily: { sans:['Manrope','sans-serif'], display:['Space Grotesk','sans-serif'] },
+          borderRadius: { 'mm':'10rem', 'mm-sm':'0.4rem', 'mm-card':'1.2rem' }
         }
       }
     }
@@ -30,426 +34,607 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAxbcWlEPi-2lDbvUL0keQU20AuFoVu6QI",
-      authDomain: "bidrr-a430b.firebaseapp.com",
-      projectId: "bidrr-a430b",
-      storageBucket: "bidrr-a430b.firebasestorage.app",
-      messagingSenderId: "316042264798",
-      appId: "1:316042264798:web:4122c2f8a5666f9815024f"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('loadingScreen').classList.add('hidden');
-        document.getElementById('app').classList.remove('hidden');
-        document.getElementById('userEmail').textContent = user.email;
-        document.getElementById('userInitials').textContent = user.email.charAt(0).toUpperCase();
-      } else {
-        window.location.href = 'index.html';
-      }
-    });
-
-    window.doLogout = function() {
-      signOut(auth).then(() => { window.location.href = 'index.html'; });
-    };
+    const cfg={apiKey:"AIzaSyAxbcWlEPi-2lDbvUL0keQU20AuFoVu6QI",authDomain:"bidrr-a430b.firebaseapp.com",projectId:"bidrr-a430b",storageBucket:"bidrr-a430b.firebasestorage.app",messagingSenderId:"316042264798",appId:"1:316042264798:web:4122c2f8a5666f9815024f"};
+    const app=initializeApp(cfg),auth=getAuth(app);
+    onAuthStateChanged(auth,u=>{if(u){document.getElementById('loadingScreen').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('userEmail').textContent=u.email;document.getElementById('userInitials').textContent=u.email.charAt(0).toUpperCase();if(!localStorage.getItem('bidrr_onboarded'))showOnboarding();}else{window.location.href='index.html';}});
+    window.doLogout=()=>signOut(auth).then(()=>window.location.href='index.html');
   </script>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Plus Jakarta Sans',sans-serif; background:#f5f3fa; color:#2d2a45; transition:background .3s,color .3s; }
-    .dark body, .dark { background:#13111c; color:#e8e6f0; }
+    :root{--spring:cubic-bezier(.4,1.35,.5,.97);--spring-slow:cubic-bezier(.25,1,.25,1);--speed:.35s;--speed-slow:.55s;--motion:1}
+    @media(prefers-reduced-motion:reduce){:root{--motion:0}}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Manrope',sans-serif;background:#f7f9fc;color:#242628;transition:background var(--speed) var(--spring),color var(--speed) var(--spring);-webkit-font-smoothing:antialiased}
+    .dark body,.dark{background:#0a0a0a;color:#e9edf6}
+    .glass{backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
 
-    .glass { backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+    /* ── SIDEBAR ── */
+    .sidebar{background:#fff;border-right:1px solid #e9edf6;transition:all var(--speed) var(--spring);display:flex;flex-direction:column}
+    .dark .sidebar{background:#1b1b1b;border-color:#393d46}
+    .nav-link{transition:all calc(var(--motion)*var(--speed)) var(--spring);font-weight:600;position:relative;border-radius:1.2rem;padding:0.7rem 1rem;font-size:13px;display:flex;align-items:center;gap:0.6rem;cursor:pointer;color:#393d46}
+    .dark .nav-link{color:#a1a8b7}
+    .nav-link:hover{background:#f0f4ff;color:#4c6ef5;transform:translateX(4px)}
+    .dark .nav-link:hover{background:rgba(137,176,255,.08)}
+    .nav-link.active{background:linear-gradient(135deg,#4c6ef5,#4263eb);color:#fff;box-shadow:0 4px 16px rgba(76,110,245,.35)}
+    .nav-link.active i{color:#fff}
+    .dark .nav-link.active{background:linear-gradient(135deg,#4263eb,#3b5bdb);box-shadow:0 4px 16px rgba(76,110,245,.45)}
+    .nav-link.active::after{content:'';position:absolute;left:0;top:50%;width:3px;height:60%;background:rgba(255,255,255,.9);border-radius:0 4px 4px 0;transform:translateY(-50%)}
 
-    .sidebar-wrap { background:white; border-right:1px solid #eae8f2; transition:all .3s; }
-    .dark .sidebar-wrap { background:#1a1730; border-color:#2d2a48; }
+    /* ── SCREENS ── */
+    .screen{display:none;animation:mmReveal calc(var(--motion)*.35s) var(--spring)}
+    .screen.active{display:block}
+    @keyframes mmReveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-    .navitem { transition:all .2s cubic-bezier(.4,0,.2,1); font-weight:600; position:relative; }
-    .navitem::after { content:''; position:absolute; left:0; top:50%; width:0; height:0; background:#9333ea; border-radius:0 4px 4px 0; transition:all .25s; transform:translateY(-50%); }
-    .navitem.active { background:linear-gradient(135deg,#f3e8ff,#ede9fe); color:#7e22ce; box-shadow:0 2px 8px -2px rgba(126,34,206,.15); }
-    .navitem.active::after { width:3px; height:60%; }
-    .navitem.active i { color:#9333ea; }
-    .dark .navitem.active { background:linear-gradient(135deg,rgba(147,51,234,.2),rgba(126,34,206,.15)); color:#d8b4fe; box-shadow:0 2px 12px -2px rgba(147,51,234,.2); }
-    .navitem:hover:not(.active) { background:#f8f6fd; transform:translateX(4px); }
-    .dark .navitem:hover:not(.active) { background:rgba(147,51,234,.08); }
+    /* ── MOBILE NAV ── */
+    .mnav{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;font-size:10px;color:#a1a8b7;cursor:pointer;transition:all calc(var(--motion)*var(--speed)) var(--spring)}
+    .mnav:active{transform:scale(.92)}
+    .mnav.active{color:#4c6ef5;font-weight:700}
 
-    .screen { display:none; animation:fadeUp .3s ease; }
-    .screen.active { display:block; }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    /* ── BENTO KPI CARDS ── */
+    .kpi{background:#fff;border:1px solid #e9edf6;border-radius:1.2rem;padding:1.2rem 1.4rem;position:relative;overflow:hidden;transition:all calc(var(--motion)*var(--speed)) var(--spring);cursor:default}
+    .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#4c6ef5,#748ffc);opacity:0;transition:opacity var(--speed) var(--spring);border-radius:1.2rem 1.2rem 0 0}
+    .kpi:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 16px 48px -12px rgba(76,110,245,.18);border-color:#bac8ff}
+    .kpi:hover::before{opacity:1}
+    .kpi:active{transform:translateY(-1px) scale(.995)}
+    .dark .kpi{background:#1b1b1b;border-color:#393d46}
+    .dark .kpi:hover{box-shadow:0 16px 48px -12px rgba(76,110,245,.25);border-color:#3b5bdb}
+    .kpi-label{font-size:11px;color:#a1a8b7;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .kpi-val{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:#0a0a0a;line-height:1}
+    .dark .kpi-val{color:#f7f9fc}
+    .kpi:hover .kpi-val{color:#4c6ef5}
+    .kpi-sub{font-size:10px;color:#c8ceda;margin-top:4px}
 
-    .mnav { display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 0; font-size:10px; color:#8682a0; cursor:pointer; transition:all .2s; }
-    .mnav:active { transform:scale(.92); }
-    .mnav.active { color:#9333ea; }
+    /* ── CARD ── */
+    .mm-card{background:#fff;border:1px solid #e9edf6;border-radius:1.2rem;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all calc(var(--motion)*var(--speed)) var(--spring)}
+    .mm-card:hover{box-shadow:0 12px 40px -8px rgba(0,0,0,.08)}
+    .dark .mm-card{background:#1b1b1b;border-color:#393d46;box-shadow:0 4px 24px -4px rgba(0,0,0,.4)}
+    .dark .mm-card:hover{box-shadow:0 12px 40px -8px rgba(0,0,0,.5)}
 
-    .app-card { background:white; border:1px solid #eae8f2; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); transition:all .25s cubic-bezier(.4,0,.2,1); }
-    .app-card:hover { box-shadow:0 8px 30px -6px rgba(147,51,234,.12); }
-    .dark .app-card { background:#1e1b34; border-color:#2d2a48; box-shadow:0 4px 20px -4px rgba(0,0,0,.3); }
-    .dark .app-card:hover { box-shadow:0 8px 30px -6px rgba(147,51,234,.2); }
+    /* ── TABLE ── */
+    table{border-collapse:collapse;width:100%}
+    th{text-align:left;padding:10px 14px;font-size:11px;color:#a1a8b7;text-transform:uppercase;letter-spacing:.5px;background:#f7f9fc;border-bottom:1px solid #e9edf6;font-weight:700;white-space:nowrap;cursor:pointer;user-select:none;transition:color var(--speed)}
+    th:hover{color:#4c6ef5}
+    .dark th{background:#1b1b1b;border-color:#393d46;color:#a1a8b7}
+    td{padding:10px 14px;font-size:13px;border-bottom:1px solid #f1f3f5;transition:all .15s;white-space:nowrap}
+    .dark td{border-color:#393d46}
+    tr{transition:all .15s}
+    tr:hover td{background:#f7f9fc}
+    .dark tr:hover td{background:rgba(76,110,245,.04)}
+    .td-name{font-weight:600;color:#0a0a0a;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+    .dark .td-name{color:#e9edf6}
+    .td-sub{font-size:11px;color:#c8ceda}
+    .td-pos{color:#457a39;font-weight:700}
+    .td-neg{color:#dc2626;font-weight:700}
 
-    .kpi-card { background:white; border:1px solid #eae8f2; border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:all .3s cubic-bezier(.4,0,.2,1); cursor:default; }
-    .kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#9333ea,#c084fc); opacity:0; transition:opacity .3s; }
-    .kpi-card:hover { transform:translateY(-4px) scale(1.01); box-shadow:0 12px 40px -8px rgba(147,51,234,.2); border-color:#d8b4fe; }
-    .kpi-card:hover::before { opacity:1; }
-    .kpi-card:active { transform:translateY(-1px) scale(.99); }
-    .dark .kpi-card { background:#1e1b34; border-color:#2d2a48; }
-    .dark .kpi-card:hover { box-shadow:0 12px 40px -8px rgba(147,51,234,.25); border-color:#6b21a8; }
-    .kpi-label { font-size:12px; color:#8682a0; margin-bottom:8px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
-    .kpi-value { font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; color:#2d2a45; line-height:1; transition:color .2s; }
-    .dark .kpi-value { color:#f3f2f7; }
-    .kpi-card:hover .kpi-value { color:#9333ea; }
-    .kpi-sub { font-size:11px; color:#a9a6b8; margin-top:6px; }
+    /* ── CHIPS ── */
+    .chip{display:inline-flex;align-items:center;gap:5px;padding:7px 16px;border-radius:10rem;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #e9edf6;background:#fff;color:#393d46;transition:all calc(var(--motion)*var(--speed)) var(--spring)}
+    .chip:hover:not(.active){border-color:#bac8ff;transform:translateY(-1px);box-shadow:0 4px 12px -2px rgba(76,110,245,.1)}
+    .chip:active{transform:scale(.95)}
+    .chip.active{background:linear-gradient(135deg,#4c6ef5,#4263eb);color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(76,110,245,.35)}
+    .dark .chip{background:#242628;border-color:#393d46;color:#a1a8b7}
+    .dark .chip.active{background:linear-gradient(135deg,#4263eb,#3b5bdb);border-color:transparent;box-shadow:0 4px 16px rgba(76,110,245,.45)}
 
-    table { border-collapse:collapse; width:100%; }
-    th { text-align:left; padding:12px 16px; font-size:11px; color:#8682a0; text-transform:uppercase; letter-spacing:.7px; background:#f8f6fd; border-bottom:1px solid #eae8f2; font-weight:700; }
-    .dark th { background:#1e1b34; border-color:#2d2a48; color:#a9a6b8; }
-    td { padding:12px 16px; font-size:13px; border-bottom:1px solid #f3f1f8; transition:all .15s; }
-    .dark td { border-color:#2d2a48; }
-    tr { transition:all .15s; }
-    tr:hover td { background:#faf8ff; transform:scale(1.001); }
-    .dark tr:hover td { background:rgba(147,51,234,.06); }
+    /* ── BUTTONS (MetaMask pill style) ── */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;border-radius:10rem;font-weight:600;border:none;cursor:pointer;position:relative;overflow:hidden;transition:all calc(var(--motion)*var(--speed)) var(--spring);font-family:'Manrope',sans-serif}
+    .btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);opacity:0;transition:opacity var(--speed)}
+    .btn:hover::after{opacity:1}
+    .btn:active{transform:scale(.97)}
+    .btn-primary{background:#0a0a0a;color:#fff;padding:10px 24px;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+    .btn-primary:active{transform:translateY(0) scale(.98)}
+    .dark .btn-primary{background:#fff;color:#0a0a0a}
+    .dark .btn-primary:hover{box-shadow:0 8px 24px rgba(255,255,255,.15)}
+    .btn-accent{background:linear-gradient(135deg,#4c6ef5,#4263eb);color:#fff;padding:10px 24px;font-size:13px;box-shadow:0 4px 16px rgba(76,110,245,.3)}
+    .btn-accent:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(76,110,245,.4)}
+    .btn-accent:active{transform:translateY(0) scale(.98)}
+    .dark .btn-accent{background:linear-gradient(135deg,#4263eb,#3b5bdb)}
+    .btn-ghost{background:transparent;color:#393d46;padding:8px 16px;font-size:13px;border:1px solid #e9edf6}
+    .btn-ghost:hover{border-color:#bac8ff;background:#f0f4ff}
+    .dark .btn-ghost{color:#a1a8b7;border-color:#393d46}
+    .dark .btn-ghost:hover{border-color:#3b5bdb;background:rgba(76,110,245,.08)}
+    .btn-sm{padding:6px 14px;font-size:12px}
+    .btn-lg{padding:14px 32px;font-size:15px}
 
-    .chip { display:inline-flex; align-items:center; gap:5px; padding:8px 16px; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #eae8f2; background:white; color:#5c5878; transition:all .2s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
-    .chip:hover:not(.active) { border-color:#d8b4fe; transform:translateY(-1px); box-shadow:0 4px 12px -2px rgba(147,51,234,.1); }
-    .chip:active { transform:scale(.95); }
-    .chip.active { background:linear-gradient(135deg,#9333ea,#7e22ce); color:white; border-color:transparent; box-shadow:0 4px 12px -2px rgba(147,51,234,.35); }
-    .chip.active:hover { box-shadow:0 6px 20px -2px rgba(147,51,234,.45); transform:translateY(-1px); }
-    .dark .chip { background:#1e1b34; border-color:#2d2a48; color:#a9a6b8; }
-    .dark .chip.active { background:linear-gradient(135deg,#7e22ce,#6b21a8); border-color:transparent; box-shadow:0 4px 12px -2px rgba(147,51,234,.4); }
+    /* ── TOGGLE ── */
+    .toggle{width:44px;height:24px;border-radius:12px;cursor:pointer;position:relative;background:#c8ceda;transition:all var(--speed) var(--spring)}
+    .toggle.on{background:linear-gradient(135deg,#4c6ef5,#4263eb)}
+    .toggle-knob{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;box-shadow:0 2px 6px rgba(0,0,0,.15);transition:all var(--speed) var(--spring)}
+    .toggle.on .toggle-knob{left:23px}
 
-    .btn-primary { background:linear-gradient(135deg,#9333ea,#7e22ce); color:white; border:none; box-shadow:0 4px 15px rgba(147,51,234,.3); transition:all .25s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
-    .btn-primary::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.15),transparent); opacity:0; transition:opacity .25s; }
-    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 25px -4px rgba(147,51,234,.45); }
-    .btn-primary:hover::after { opacity:1; }
-    .btn-primary:active { transform:translateY(0) scale(.98); box-shadow:0 4px 15px rgba(147,51,234,.3); }
-    .dark .btn-primary { background:linear-gradient(135deg,#7e22ce,#6b21a8); box-shadow:0 4px 15px rgba(147,51,234,.4); }
-    .dark .btn-primary:hover { box-shadow:0 8px 25px -4px rgba(147,51,234,.55); }
+    /* ── HEADER ── */
+    .hdr{background:rgba(247,249,252,.88);backdrop-filter:blur(24px);border-bottom:1px solid #e9edf6;transition:all var(--speed) var(--spring)}
+    .dark .hdr{background:rgba(10,10,10,.88);border-color:#393d46}
 
-    .btn-ghost { transition:all .2s; }
-    .btn-ghost:hover { background:rgba(147,51,234,.08); }
-    .btn-ghost:active { transform:scale(.95); }
+    /* ── MODAL ── */
+    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+    .modal-bg.open{display:flex}
+    .modal-box{background:#fff;border-radius:1.2rem;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px -20px rgba(0,0,0,.3);animation:mmReveal calc(var(--motion)*.3s) var(--spring)}
+    .dark .modal-box{background:#1b1b1b;border:1px solid #393d46}
 
-    .toggle-btn { width:48px; height:26px; border-radius:13px; cursor:pointer; position:relative; background:linear-gradient(135deg,#9333ea,#7e22ce); box-shadow:0 2px 8px rgba(147,51,234,.3); transition:all .3s; }
-    .toggle-btn:hover { box-shadow:0 4px 16px rgba(147,51,234,.45); transform:scale(1.05); }
-    .toggle-btn:active { transform:scale(.95); }
-    .toggle-btn.light-mode { background:linear-gradient(135deg,#d5d3de,#c5c3ce); box-shadow:0 2px 8px rgba(0,0,0,.1); }
-    .toggle-btn.light-mode:hover { box-shadow:0 4px 16px rgba(0,0,0,.15); }
-    .toggle-knob { width:20px; height:20px; border-radius:50%; background:white; position:absolute; top:3px; left:25px; box-shadow:0 2px 6px rgba(0,0,0,.15); transition:all .3s cubic-bezier(.4,0,.2,1); display:flex; align-items:center; justify-content:center; }
-    .toggle-btn:hover .toggle-knob { box-shadow:0 3px 10px rgba(0,0,0,.2); }
-    .toggle-btn.light-mode .toggle-knob { left:3px; }
+    /* ── ALERT ── */
+    .alert{border-radius:1rem;padding:14px 18px;display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+    .alert-warn{background:#fff1eb;border:1px solid #ffa680;color:#661800}
+    .dark .alert-warn{background:rgba(255,92,22,.06);border-color:rgba(255,164,128,.2);color:#ffa680}
 
-    .header-wrap { background:rgba(255,255,255,.85); backdrop-filter:blur(20px); border-bottom:1px solid #eae8f2; transition:all .3s; }
-    .dark .header-wrap { background:rgba(19,17,28,.85); border-color:#2d2a48; }
+    /* ── SEARCH ── */
+    .search{position:relative}
+    .search input{padding-left:36px}
+    .search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#c8ceda;font-size:16px}
 
-    .period-btn { transition:all .2s; cursor:pointer; }
-    .period-btn:hover { transform:scale(1.03); }
-    .period-btn:active { transform:scale(.97); }
+    /* ── TAB BAR ── */
+    .tabs{display:inline-flex;gap:2px;padding:3px;border-radius:10rem;background:#e9edf6}
+    .dark .tabs{background:#242628}
+    .tabs button{padding:6px 14px;border-radius:10rem;font-size:12px;font-weight:600;cursor:pointer;transition:all calc(var(--motion)*var(--speed)) var(--spring);color:#a1a8b7;border:none;background:transparent}
+    .tabs button.active{background:#fff;color:#0a0a0a;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .dark .tabs button.active{background:#393d46;color:#f7f9fc}
 
-    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-    .skeleton { background:linear-gradient(90deg,#eae8f2 25%,#f3f1f8 50%,#eae8f2 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:8px; }
-    .dark .skeleton { background:linear-gradient(90deg,#2d2a48 25%,#3d3a54 50%,#2d2a48 75%); background-size:200% 100%; }
+    /* ── PERIOD DROPDOWN ── */
+    .dd{position:relative;display:inline-block}
+    .dd-menu{position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e9edf6;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);z-index:20;min-width:160px;display:none;overflow:hidden}
+    .dd-menu.open{display:block}
+    .dd-menu button{display:block;width:100%;text-align:left;padding:9px 14px;font-size:13px;font-weight:500;transition:all .15s;border:none;background:none;cursor:pointer}
+    .dd-menu button:hover{background:#f0f4ff;color:#4c6ef5}
+    .dd-menu button.active{color:#4c6ef5;font-weight:700}
+    .dark .dd-menu{background:#1b1b1b;border-color:#393d46}
 
-    @keyframes pulse-ring { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(1.4);opacity:0} }
-    .pulse-dot { position:relative; }
-    .pulse-dot::after { content:''; position:absolute; inset:-2px; border-radius:50%; background:#9333ea; animation:pulse-ring 2s infinite; z-index:-1; }
+    /* ── SCROLLBAR ── */
+    .tbl-scroll{overflow-x:auto}
+    .tbl-scroll::-webkit-scrollbar{height:5px}
+    .tbl-scroll::-webkit-scrollbar-track{background:#e9edf6;border-radius:3px}
+    .tbl-scroll::-webkit-scrollbar-thumb{background:#c8ceda;border-radius:3px}
 
-    @media(max-width:1024px) {
-      #sidebar { display:none !important; }
-      #appMain { margin-left:0 !important; }
-    }
+    /* ── PROGRESS BAR ── */
+    .prog{height:3px;background:#e9edf6;border-radius:2px;overflow:hidden}
+    .prog-fill{height:100%;background:linear-gradient(90deg,#4c6ef5,#4263eb);transition:width .4s var(--spring)}
+    .ob-step{display:none;animation:mmReveal calc(var(--motion)*.3s) var(--spring)}
+    .ob-step.active{display:block}
+
+    /* ── FORMS ── */
+    input[type=text],input[type=email],input[type=tel],input[type=password],input[type=number],input[type=date],input[type=time],textarea,select{border:1px solid #e9edf6;border-radius:10rem;padding:10px 16px;font-size:13px;font-family:'Manrope',sans-serif;background:#fff;color:#242628;transition:all var(--speed) var(--spring);width:100%;outline:none}
+    input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(76,110,245,.15);border-color:#4c6ef5}
+    .dark input,.dark textarea,.dark select{background:#242628;border-color:#393d46;color:#e9edf6}
+    select{cursor:pointer;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a8b7' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+
+    /* ── FLOATING ANIM ── */
+    @keyframes mmFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    .mm-float{animation:mmFloat 4s ease-in-out infinite}
+
+    /* ── ACTIVE DAY ── */
+    .day-active{background:linear-gradient(135deg,#4c6ef5,#4263eb)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 2px 8px rgba(76,110,245,.3)}
+
+    @media(max-width:1024px){#sidebar{display:none!important}#appMain{margin-left:0!important}}
   </style>
 </head>
 <body>
 
-<div id="loadingScreen" class="min-h-screen flex items-center justify-center" style="background:#f5f3fa">
-  <div class="flex items-center gap-3 text-[14px]" style="color:#8682a0"><i class="ti ti-loader-2 animate-spin text-xl"></i> Загрузка…</div>
+<div id="loadingScreen" class="min-h-screen flex items-center justify-center" style="background:#f7f9fc">
+  <div class="flex items-center gap-3 text-[14px]" style="color:#a1a8b7"><i class="ti ti-loader-2 animate-spin text-xl"></i> Загрузка…</div>
 </div>
 
+<!-- ONBOARDING -->
+<div id="onboardingModal" class="modal-bg">
+  <div class="modal-box max-w-[440px] p-0 overflow-hidden">
+    <div class="p-6">
+      <div class="prog mb-5"><div class="prog-fill" id="obProg" style="width:33%"></div></div>
+      <div id="ob1" class="ob-step active">
+        <div class="w-14 h-14 rounded-2xl bg-mm-orangeBg text-mm-orange text-3xl flex items-center justify-center mx-auto mb-4"><i class="ti ti-plug-connected"></i></div>
+        <h2 class="text-xl font-bold text-center">Подключите кабинет WB</h2>
+        <p class="text-ink-300 text-[14px] mt-2 text-center">Вставьте API-ключ Wildberries</p>
+        <div class="mt-5"><label class="text-[13px] font-medium">API-ключ</label><input type="text" placeholder="Вставьте API-ключ" class="mt-1 font-mono"></div>
+        <button onclick="obNext(2)" class="btn btn-primary w-full mt-5 py-3 text-[14px]">Подключить</button>
+        <button onclick="obSkip()" class="w-full mt-2 py-2.5 rounded-xl font-semibold text-[13px] text-ink-300 hover:text-ink-400 transition-colors">Пропустить</button>
+      </div>
+      <div id="ob2" class="ob-step">
+        <div class="w-14 h-14 rounded-2xl bg-mm-purpleBg text-mm-purple text-3xl flex items-center justify-center mx-auto mb-4"><i class="ti ti-brand-telegram"></i></div>
+        <h2 class="text-xl font-bold text-center">Привяжите Telegram</h2>
+        <p class="text-ink-300 text-[14px] mt-2 text-center">Алерты по рекламе в боте</p>
+        <a href="https://t.me/bidrr_bot" target="_blank" class="btn btn-accent w-full mt-5 py-3 text-[14px]"><i class="ti ti-brand-telegram"></i>Открыть Telegram</a>
+        <button onclick="obNext(3)" class="w-full mt-4 py-2.5 text-[13px] text-ink-300 font-semibold">Жду подтверждения →</button>
+        <button onclick="obSkip()" class="w-full mt-1 py-2.5 text-[13px] text-ink-200 font-semibold">Пропустить</button>
+      </div>
+      <div id="ob3" class="ob-step">
+        <div class="w-14 h-14 rounded-2xl bg-mm-greenLight text-mm-greenDark text-3xl flex items-center justify-center mx-auto mb-4"><i class="ti ti-circle-check"></i></div>
+        <h2 class="text-xl font-bold text-center">Всё готово!</h2>
+        <p class="text-ink-300 text-[14px] mt-2 text-center">Кабинет подключён. Начните экономить.</p>
+        <button onclick="obFinish()" class="btn btn-primary w-full mt-5 py-3 text-[14px]">Перейти в кабинет</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modalBg" class="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<!-- APP -->
 <div id="app" class="hidden">
 <div class="flex min-h-screen">
 
-  <aside id="sidebar" class="sidebar-wrap w-64 shrink-0 hidden lg:flex flex-col fixed h-screen z-20">
-    <div onclick="go('dashboard')" class="h-16 px-5 flex items-center gap-2.5 cursor-pointer transition-colors" style="border-bottom:1px solid #eae8f2">
-      <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:linear-gradient(135deg,#9333ea,#7e22ce)">b</div>
-      <div><div class="font-bold text-[15px] leading-tight">bid<span style="color:#9333ea">RR</span></div><div class="text-[11px]" style="color:#a9a6b8">автобиддер WB</div></div>
-    </div>
-    <nav class="flex-1 px-3 py-4 space-y-1 text-[14px] overflow-y-auto">
-      <a onclick="go('dashboard')" id="nav-dashboard" class="navitem active flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-layout-dashboard text-lg shrink-0"></i><span>Обзор</span></a>
-      <a onclick="go('campaigns')" id="nav-campaigns" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-rocket text-lg shrink-0"></i><span>Кампании</span></a>
-      <a onclick="go('intervals')" id="nav-intervals" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-clock-hour-4 text-lg shrink-0"></i><span>Интервалы</span></a>
-      <a onclick="go('subscription')" id="nav-subscription" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-crown text-lg shrink-0"></i><span>Подписка</span></a>
-      <a onclick="go('connect')" id="nav-connect" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-plug text-lg shrink-0"></i><span>Подключить кабинет</span></a>
-      <a onclick="go('cabinets')" id="nav-cabinets" class="navitem flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"><i class="ti ti-building-store text-lg shrink-0"></i><span>Кабинеты</span></a>
-    </nav>
-    <div class="px-4 pb-4">
-      <div class="rounded-xl p-3 text-[12px] cursor-pointer transition-all" style="background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #e9d5ff" onclick="go('subscription')">
-        <div class="font-bold flex items-center gap-1.5" style="color:#7e22ce"><i class="ti ti-clock-hour-4"></i>Подписка</div>
-        <div style="color:#8682a0" class="mt-1">7 дней бесплатно</div>
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="w-[220px] shrink-0 hidden lg:flex fixed h-screen z-20">
+    <div class="sidebar w-full h-full flex flex-col">
+      <div class="h-14 px-4 flex items-center gap-2.5 shrink-0" style="border-bottom:1px solid #e9edf6">
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold text-sm" style="background:linear-gradient(135deg,#4c6ef5,#4263eb)">b</div>
+        <div><div class="font-bold text-[14px] leading-tight">bid<span class="text-brand-600">RR</span></div><div class="text-[10px] text-ink-200">партнёр Wildberries</div></div>
+      </div>
+
+      <nav class="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto">
+        <a onclick="go('dashboard')" id="nav-dashboard" class="nav-link active"><i class="ti ti-layout-dashboard text-[15px] shrink-0"></i><span>Обзор</span></a>
+        <a onclick="go('campaigns')" id="nav-campaigns" class="nav-link"><i class="ti ti-rocket text-[15px] shrink-0"></i><span>Кампании</span></a>
+        <a onclick="go('intervals')" id="nav-intervals" class="nav-link"><i class="ti ti-clock-hour-4 text-[15px] shrink-0"></i><span>Интервалы</span></a>
+        <a onclick="go('subscription')" id="nav-subscription" class="nav-link"><i class="ti ti-crown text-[15px] shrink-0"></i><span>Подписка</span></a>
+        <a onclick="go('connect')" id="nav-connect" class="nav-link"><i class="ti ti-plug text-[15px] shrink-0"></i><span>Подключить</span></a>
+        <a onclick="go('cabinets')" id="nav-cabinets" class="nav-link"><i class="ti ti-building-store text-[15px] shrink-0"></i><span>Кабинеты</span></a>
+      </nav>
+
+      <div class="mt-auto px-2 pb-3 space-y-1 shrink-0">
+        <a onclick="go('referral')" id="nav-referral" class="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-semibold text-ink-300 hover:bg-surface-50 dark:hover:bg-ink-500/10 transition-colors cursor-pointer">
+          <i class="ti ti-gift text-[14px]"></i><span>Реферальная</span><i class="ti ti-chevron-right text-[11px] ml-auto text-ink-200"></i>
+        </a>
+        <div class="px-3 py-2 flex items-center justify-between text-[12px]">
+          <span class="text-ink-300 flex items-center gap-1.5"><i class="ti ti-wallet text-[14px]"></i>Кошелёк</span>
+          <span class="font-bold">0 ₽</span>
+        </div>
+        <a onclick="go('subscription')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-semibold transition-colors cursor-pointer" style="background:linear-gradient(135deg,#f0f4ff,#dbe4ff);color:#4263eb">
+          <i class="ti ti-crown text-[14px]"></i><span>Подписка</span>
+          <div class="ml-auto text-[9px] opacity-70">оплата по РК</div>
+        </a>
       </div>
     </div>
   </aside>
 
-  <main id="appMain" class="flex-1 min-w-0 lg:ml-64 pb-20 lg:pb-0">
-    <header class="header-wrap h-16 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-10">
+  <!-- MAIN -->
+  <main id="appMain" class="flex-1 min-w-0 lg:ml-[220px] pb-20 lg:pb-0">
+    <header class="hdr h-14 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-10">
       <div class="flex items-center gap-2.5">
-        <div onclick="go('dashboard')" class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold cursor-pointer lg:hidden" style="background:linear-gradient(135deg,#9333ea,#7e22ce)">b</div>
-        <div id="crumb" class="text-[15px] font-bold text-ink-600">Обзор</div>
+        <div class="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold cursor-pointer lg:hidden text-sm">b</div>
+        <div id="crumb" class="text-[15px] font-bold">Обзор</div>
       </div>
-      <div class="flex items-center gap-3">
-        <div id="themeToggle" onclick="toggleTheme()" class="toggle-btn" title="Дневной/Ночной режим">
-          <div class="toggle-knob">
-            <i class="ti ti-moon text-[10px]" style="color:#9333ea"></i>
-          </div>
+      <div class="flex items-center gap-2">
+        <a href="index.html#lead" class="hidden sm:flex btn btn-ghost btn-sm text-[11px]"><i class="ti ti-headset text-[13px]"></i>Поддержка</a>
+        <div id="themeToggle" onclick="toggleTheme()" class="toggle" title="Тема">
+          <div class="toggle-knob"><i class="ti ti-moon text-[9px]" style="color:#4c6ef5"></i></div>
         </div>
-        <a href="index.html#lead" class="hidden sm:flex items-center gap-2 text-[13px] px-3 py-1.5 rounded-full font-semibold transition-all" style="background:#f0fdf4;color:#15803d"><i class="ti ti-headset"></i>Поддержка</a>
-        <span id="userEmail" class="text-[13px] hidden md:inline font-semibold" style="color:#8682a0"></span>
-        <div id="userInitials" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-[13px] text-white" style="background:linear-gradient(135deg,#9333ea,#7e22ce)">—</div>
-        <button onclick="doLogout()" class="w-9 h-9 rounded-full flex items-center justify-center transition-colors" style="color:#8682a0" onmouseover="this.style.background='#f3e8ff'" onmouseout="this.style.background='transparent'"><i class="ti ti-logout text-lg"></i></button>
+        <span id="userEmail" class="text-[12px] hidden md:inline text-ink-300"></span>
+        <div id="userInitials" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-[12px] text-white" style="background:linear-gradient(135deg,#4c6ef5,#4263eb)">—</div>
+        <button onclick="doLogout()" class="w-8 h-8 rounded-full flex items-center justify-center text-ink-300 hover:bg-surface-100 dark:hover:bg-ink-500/20 transition-colors"><i class="ti ti-logout text-[15px]"></i></button>
       </div>
     </header>
 
-    <div class="p-4 lg:p-8">
+    <div class="p-4 lg:p-6">
 
+      <!-- ОБЗОР -->
       <section id="dashboard" class="screen active">
-        <h1 class="text-2xl font-extrabold mb-1">Обзор</h1>
-        <p style="color:#8682a0" class="text-[14px]">Сводная статистика по рекламе</p>
+        <h1 class="text-2xl font-extrabold mb-0.5">Обзор</h1>
+        <p class="text-[13px] text-ink-300 mb-4">Сводная статистика · за 7 дней</p>
 
-        <div class="flex gap-2 mt-4 mb-5 flex-wrap">
-          <span class="chip active">Все кабинеты</span>
+        <div class="alert alert-warn mb-4">
+          <i class="ti ti-alert-triangle text-lg shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-[13px]">Недействительные API-ключи в 1 кабинете</div>
+            <div class="text-[12px] mt-0.5 opacity-80">Обновите ключ для корректной работы:</div>
+            <div class="mt-2 inline-flex items-center gap-1.5 bg-white/50 rounded-lg px-2.5 py-1 text-[11px] font-medium"><i class="ti ti-building-store text-[11px]"></i>ИП Трушина М. В. · ключ создан не для bidRR</div>
+          </div>
+          <button onclick="openModal('updateKey')" class="btn btn-primary btn-sm whitespace-nowrap shrink-0">Обновить ключ</button>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-          <div class="kpi-card"><div class="kpi-label">Расход</div><div class="kpi-value">0 ₽</div><div class="kpi-sub">за период</div></div>
-          <div class="kpi-card"><div class="kpi-label">Заказы</div><div class="kpi-value">0</div><div class="kpi-sub">шт.</div></div>
-          <div class="kpi-card"><div class="kpi-label">ДРР</div><div class="kpi-value" style="color:#9333ea">—</div><div class="kpi-sub">цель: &lt;15%</div></div>
-          <div class="kpi-card"><div class="kpi-label">Экономия</div><div class="kpi-value" style="color:#16a34a">0 ₽</div><div class="kpi-sub">благодаря биддеру</div></div>
-          <div class="kpi-card"><div class="kpi-label">Просмотры</div><div class="kpi-value">0</div><div class="kpi-sub">показов</div></div>
-          <div class="kpi-card"><div class="kpi-label">Клики</div><div class="kpi-value">0</div><div class="kpi-sub">CTR —</div></div>
+        <div class="flex items-center gap-2 mb-3 flex-wrap">
+          <span class="chip active" onclick="selCab(this)">Все кабинеты</span>
+          <span class="chip" onclick="selCab(this)">ИП Трушина М. В.</span>
+          <span class="chip" onclick="selCab(this)">ООО "ОНТРЕЙД"</span>
+          <div class="ml-auto flex items-center gap-1.5 text-[11px] text-ink-300 bg-surface-50 dark:bg-ink-500/10 rounded-full px-3 py-1.5"><i class="ti ti-building-store text-[12px]"></i>Кабинеты <span class="font-bold text-ink-500">2</span></div>
         </div>
 
-        <div class="app-card overflow-hidden">
-          <div class="px-5 py-3 flex items-center justify-between" style="border-bottom:1px solid #eae8f2">
-            <div class="inline-flex items-center gap-1 p-1 rounded-xl text-[13px]" style="background:#f3f1f8">
-              <button class="px-3.5 py-1.5 rounded-lg font-bold text-white" style="background:linear-gradient(135deg,#9333ea,#7e22ce);box-shadow:0 2px 8px rgba(147,51,234,.3)">По кампаниям</button>
-              <button class="px-3.5 py-1.5 rounded-lg font-semibold" style="color:#8682a0">По дням</button>
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <div class="dd" id="periodDD">
+            <button onclick="toggleDD()" class="btn btn-ghost btn-sm text-[12px]"><i class="ti ti-calendar text-[13px] text-brand-600"></i><span id="periodLbl">Период 7 дней</span><i class="ti ti-chevron-down text-[10px] text-ink-200 ml-0.5"></i></button>
+            <div class="dd-menu" id="periodMenu">
+              <button onclick="setPeriod(7)" class="active">7 дней</button>
+              <button onclick="setPeriod(14)">14 дней</button>
+              <button onclick="setPeriod(30)">30 дней</button>
+              <button onclick="setPeriod(90)">90 дней</button>
+              <button onclick="openModal('customPeriod')">Свой период…</button>
             </div>
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-[13px] min-w-[800px]">
+          <select class="!w-auto !rounded-full !py-1.5 !px-4 !text-[12px] !font-semibold" style="min-width:160px"><option>Все размещения</option><option>Поиск</option><option>Каталог</option><option>Топ</option></select>
+        </div>
+
+        <div class="mb-2 text-[13px] font-bold text-ink-400">Сводка за период</div>
+        <div class="flex gap-3 mb-4 overflow-x-auto pb-1" style="scrollbar-width:none">
+          <div class="kpi"><div class="kpi-label">Активные РК</div><div class="kpi-val">19</div><div class="kpi-sub">в работе</div></div>
+          <div class="kpi"><div class="kpi-label">Расход</div><div class="kpi-val">183 612 ₽</div></div>
+          <div class="kpi"><div class="kpi-label">Заказы</div><div class="kpi-val">675</div></div>
+          <div class="kpi"><div class="kpi-label">Сумма заказов</div><div class="kpi-val">1 310 450 ₽</div></div>
+          <div class="kpi"><div class="kpi-label">Корзины</div><div class="kpi-val">2 467</div></div>
+          <div class="kpi"><div class="kpi-label">ДРР</div><div class="kpi-val" style="color:#4c6ef5">14,0%</div></div>
+          <div class="kpi"><div class="kpi-label">CTR</div><div class="kpi-val">5,42%</div></div>
+          <div class="kpi"><div class="kpi-label">CPC</div><div class="kpi-val">13 ₽</div></div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 mb-3">
+          <div class="search flex-1 min-w-[200px]"><i class="ti ti-search"></i><input type="text" placeholder="Поиск РК в таблице…" class="text-[13px]"></div>
+          <button onclick="openModal('excel')" class="btn btn-primary btn-sm text-[12px]"><i class="ti ti-download"></i>Скачать Excel</button>
+        </div>
+
+        <div class="flex items-center justify-between mb-3">
+          <div class="tabs"><button class="active" onclick="switchTab(this)">По кампаниям</button><button onclick="switchTab(this)">По дням</button></div>
+          <div class="flex items-center gap-2">
+            <button onclick="openModal('cols')" class="flex items-center gap-1 text-[11px] font-bold text-ink-300 hover:text-brand-600 transition-colors px-2 py-1 rounded-lg"><i class="ti ti-table text-[13px]"></i>Колонки <span class="bg-surface-100 dark:bg-ink-500/20 px-1.5 py-0.5 rounded text-[10px]">18/18</span></button>
+            <button onclick="toggleFS()" class="w-7 h-7 rounded-lg flex items-center justify-center text-ink-300 hover:text-brand-600 hover:bg-surface-50 transition-colors"><i class="ti ti-arrows-maximize text-[13px]"></i></button>
+          </div>
+        </div>
+
+        <div class="mm-card overflow-hidden">
+          <div class="tbl-scroll">
+            <table class="w-full text-[12px] min-w-[1200px]" id="dashTable">
               <thead><tr>
-                <th class="font-bold">Кампания</th>
-                <th class="font-bold">Статус</th>
-                <th class="font-bold">Настройки</th>
-                <th class="font-bold text-right">Бюджет</th>
-                <th class="font-bold text-right">Расход</th>
-                <th class="font-bold text-right">Просмотры</th>
-                <th class="font-bold text-right">Заказы</th>
+                <th>Кампания</th><th>↓ Расход</th><th>Доля</th><th>Показы</th><th>Клики</th><th>CTR</th><th>CPC</th><th>CPM</th><th>Корзины</th><th>CR→корз</th><th>Заказы</th><th>CR→зак</th><th>СРО</th><th>Выручка</th><th>Ср. чек</th><th>ДРР</th><th>ROAS</th><th>Прибыль</th><th>Доля выр.</th>
               </tr></thead>
-              <tbody>
-                <tr><td colspan="7" class="text-center py-14" style="color:#cfcce0"><i class="ti ti-inbox text-5xl mb-3 block" style="color:#d8b4fe"></i><span class="text-[14px] font-semibold">Подключите кабинет, чтобы увидеть статистику</span></td></tr>
-              </tbody>
+              <tbody id="dashBody"></tbody>
             </table>
           </div>
         </div>
       </section>
 
+      <!-- КАМПАНИИ -->
       <section id="campaigns" class="screen">
-        <div class="flex items-center justify-between mb-4">
-          <div><h1 class="text-2xl font-extrabold">Кампании</h1><p class="text-[14px] mt-1" style="color:#8682a0">Управление рекламными кампаниями</p></div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div><h1 class="text-2xl font-extrabold">Кампании</h1><p class="text-[12px] mt-1 text-ink-300">Управление рекламными кампаниями</p></div>
+          <div id="campAct" class="hidden items-center gap-2">
+            <span class="text-[12px] text-ink-300"><span id="selCnt">0</span> выбрано</span>
+            <button onclick="massAct('pause')" class="btn btn-ghost btn-sm"><i class="ti ti-player-pause"></i>Пауза</button>
+            <button onclick="massAct('start')" class="btn btn-accent btn-sm"><i class="ti ti-player-play"></i>Запустить</button>
+          </div>
         </div>
+        <p class="text-[11px] text-ink-200 mb-3">Выделите кампании, чтобы применить действие ко всем.</p>
         <div class="flex items-center gap-2 mb-4 flex-wrap">
-          <span class="chip active">Все</span>
-          <span class="chip">Активные</span>
-          <span class="chip">На паузе</span>
-          <span class="chip">Архив</span>
+          <span class="chip active" onclick="filterC(this)">Все</span>
+          <span class="chip" onclick="filterC(this)">Активные</span>
+          <span class="chip" onclick="filterC(this)">На паузе</span>
+          <span class="chip" onclick="filterC(this)">Архив</span>
         </div>
-        <div class="app-card overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-[13px] min-w-[880px]">
+        <div class="mm-card overflow-hidden">
+          <div class="tbl-scroll">
+            <table class="w-full text-[12px] min-w-[1100px]">
               <thead><tr>
-                <th class="py-3 pl-4 w-10"><input type="checkbox" class="accent-purple-600"></th>
-                <th class="font-bold">Кампания</th>
-                <th class="font-bold">Статус</th>
-                <th class="font-bold">Настройки</th>
-                <th class="font-bold text-right">Бюджет</th>
-                <th class="font-bold text-right">Расход</th>
-                <th class="font-bold text-right">Просмотры</th>
-                <th class="font-bold text-right">Заказы</th>
-                <th class="font-bold text-right pr-3">ДРР</th>
+                <th class="w-10"><input type="checkbox" onchange="toggleAll(this)" class="accent-brand-600 rounded cursor-pointer"></th>
+                <th>Кампания</th><th>Статус</th><th>Настройки</th><th class="text-right">Бюджет</th><th class="text-right">Ставка</th><th class="text-right">Расход</th><th class="text-right">Просмотры</th><th class="text-right">Клики</th><th class="text-right">Заказы</th><th class="text-right">ДРР</th>
               </tr></thead>
-              <tbody>
-                <tr><td colspan="9" class="text-center py-14" style="color:#cfcce0"><i class="ti ti-inbox text-5xl mb-3 block" style="color:#d8b4fe"></i><span class="text-[14px] font-semibold">Подключите кабинет для просмотра кампаний</span></td></tr>
-              </tbody>
+              <tbody id="campBody"><tr><td colspan="11" class="text-center py-14 text-ink-200"><i class="ti ti-inbox text-5xl mb-3 block text-brand-200"></i><span class="text-[13px] font-semibold">Подключите кабинет</span></td></tr></tbody>
             </table>
           </div>
         </div>
       </section>
 
+      <!-- ИНТЕРВАЛЫ -->
       <section id="intervals" class="screen">
-        <div class="flex items-center justify-between gap-3 mb-4">
-          <div><h1 class="text-2xl font-extrabold">Интервалы</h1><p class="text-[14px] mt-1" style="color:#8682a0">Время показа рекламных кампаний</p></div>
-          <button class="btn-primary text-[14px] font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 whitespace-nowrap"><i class="ti ti-plus"></i><span class="hidden sm:inline">Создать интервал</span></button>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div><h1 class="text-2xl font-extrabold">Интервалы</h1><p class="text-[12px] mt-1 text-ink-300">Время показа РК · по кабинетам</p></div>
+          <button onclick="openModal('createInterval')" class="btn btn-accent btn-sm"><i class="ti ti-plus"></i><span class="hidden sm:inline">Создать интервал</span></button>
         </div>
-        <div class="app-card overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-[13px] min-w-[800px]">
-              <thead><tr>
-                <th class="py-2.5 pl-4 w-10"><input type="checkbox" class="accent-purple-600"></th>
-                <th class="font-bold">Кампания</th>
-                <th class="font-bold">Кабинет</th>
-                <th class="font-bold">Статус</th>
-                <th class="font-bold">Интервал</th>
-                <th class="font-bold text-right">Бюджет</th>
-                <th class="font-bold"></th>
-              </tr></thead>
-              <tbody>
-                <tr><td colspan="7" class="text-center py-14" style="color:#cfcce0"><i class="ti ti-inbox text-5xl mb-3 block" style="color:#d8b4fe"></i><span class="text-[14px] font-semibold">Нет интервалов</span></td></tr>
-              </tbody>
+        <div class="mm-card overflow-hidden">
+          <div class="tbl-scroll">
+            <table class="w-full text-[12px] min-w-[800px]">
+              <thead><tr><th class="w-10"><input type="checkbox" class="accent-brand-600 rounded cursor-pointer"></th><th>Кампания</th><th>Кабинет</th><th>Статус</th><th>Интервал</th><th class="text-right">Бюджет</th><th>Пополнение</th><th></th></tr></thead>
+              <tbody><tr><td colspan="8" class="text-center py-14 text-ink-200"><i class="ti ti-inbox text-5xl mb-3 block text-brand-200"></i><span class="text-[13px] font-semibold">Нет интервалов</span></td></tr></tbody>
             </table>
           </div>
         </div>
       </section>
 
+      <!-- ПОДПИСКА -->
       <section id="subscription" class="screen">
         <h1 class="text-2xl font-extrabold mb-1">Подписка</h1>
-        <p class="text-[14px] mb-4" style="color:#8682a0">Платите только за РК, добавленные в сервис. Первая РК бесплатна.</p>
-        <div class="grid lg:grid-cols-[1fr_minmax(320px,360px)] gap-4 items-start">
+        <p class="text-[12px] mb-4 text-ink-300">Платите только за РК. Первая РК бесплатна.</p>
+        <div class="grid lg:grid-cols-[1fr_minmax(280px,320px)] gap-4 items-start">
           <div class="space-y-4 min-w-0">
-            <div class="app-card p-5">
-              <div class="flex items-baseline justify-between mb-3">
-                <span class="text-[14px] font-bold">Срок подписки</span>
-                <span class="text-[12px]" style="color:#a9a6b8">дольше — выгоднее</span>
-              </div>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button class="rounded-xl px-3 py-3 text-center font-bold text-[13px] transition-all" style="border:2px solid #9333ea;background:linear-gradient(135deg,#faf5ff,#f3e8ff);color:#7e22ce">1 мес</button>
-                <button class="rounded-xl px-3 py-3 text-center font-bold text-[13px] transition-all" style="border:1px solid #eae8f2" onmouseover="this.style.borderColor='#d8b4fe'" onmouseout="this.style.borderColor='#eae8f2'">3 мес <span style="color:#16a34a" class="text-[11px]">-10%</span></button>
-                <button class="rounded-xl px-3 py-3 text-center font-bold text-[13px] transition-all" style="border:1px solid #eae8f2" onmouseover="this.style.borderColor='#d8b4fe'" onmouseout="this.style.borderColor='#eae8f2'">6 мес <span style="color:#16a34a" class="text-[11px]">-20%</span></button>
-                <button class="rounded-xl px-3 py-3 text-center font-bold text-[13px] transition-all" style="border:1px solid #eae8f2" onmouseover="this.style.borderColor='#d8b4fe'" onmouseout="this.style.borderColor='#eae8f2'">12 мес <span style="color:#16a34a" class="text-[11px]">-30%</span></button>
+            <div class="mm-card p-4">
+              <div class="text-[13px] font-bold mb-3">Срок подписки <span class="text-[11px] text-ink-200 font-normal ml-1">дольше — выгоднее</span></div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="perBtns">
+                <button onclick="selPer(this,1)" class="rounded-full px-3 py-2.5 text-center font-bold text-[12px] border-2 border-brand-600 bg-brand-50 text-brand-700">1 мес</button>
+                <button onclick="selPer(this,3)" class="rounded-full px-3 py-2.5 text-center font-bold text-[12px] border border-surface-200 dark:border-ink-400 hover:border-brand-300 transition-all">3 мес <span class="text-good-600 text-[10px]">-10%</span></button>
+                <button onclick="selPer(this,6)" class="rounded-full px-3 py-2.5 text-center font-bold text-[12px] border border-surface-200 dark:border-ink-400 hover:border-brand-300 transition-all">6 мес <span class="text-good-600 text-[10px]">-20%</span></button>
+                <button onclick="selPer(this,12)" class="rounded-full px-3 py-2.5 text-center font-bold text-[12px] border border-surface-200 dark:border-ink-400 hover:border-brand-300 transition-all">12 мес <span class="text-good-600 text-[10px]">-30%</span></button>
               </div>
             </div>
-            <div class="app-card p-5">
-              <div class="text-[14px] font-bold mb-1">Тариф</div>
-              <p class="text-[12px] leading-relaxed mb-3" style="color:#8682a0">Оплата по числу подключённых РК. Чем больше РК, тем дешевле каждая.</p>
-              <div style="border-top:1px solid #eae8f2">
-                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">1 РК</span><span class="font-bold" style="color:#16a34a">Бесплатно</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">2–5 РК</span><span class="font-bold">290 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">6–20 РК</span><span class="font-bold">240 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">21–50 РК</span><span class="font-bold">190 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]" style="border-bottom:1px solid #f3f1f8"><span style="color:#a9a6b8">51–100 РК</span><span class="font-bold">150 ₽/РК</span></div>
-                <div class="flex items-center justify-between py-3 text-[13px]"><span style="color:#a9a6b8">100+ РК</span><span class="font-bold">15 990 ₽/мес</span></div>
+            <div class="mm-card p-4">
+              <div class="text-[13px] font-bold mb-1">Кабинеты · РК</div>
+              <p class="text-[11px] text-ink-300 mb-3">Двигайте ползунок — сколько РК вести.</p>
+              <input type="range" min="1" max="151" value="1" id="subSlider" oninput="calcPrice()" class="w-full" style="accent-color:#4c6ef5">
+              <div class="flex justify-between text-[10px] text-ink-200 mt-1"><span>1 РК</span><span class="text-brand-600 font-medium">Безлимит</span></div>
+              <div class="mt-3 pt-3 space-y-1" style="border-top:1px solid #e9edf6">
+                <div class="flex items-center justify-between py-1 text-[11px]" style="border-bottom:1px solid #f1f3f5"><span class="text-ink-200">1 РК</span><span class="font-bold text-good-600">Бесплатно</span></div>
+                <div class="flex items-center justify-between py-1 text-[11px]" style="border-bottom:1px solid #f1f3f5"><span class="text-ink-200">2–5 РК</span><span class="font-bold">290 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-1 text-[11px]" style="border-bottom:1px solid #f1f3f5"><span class="text-ink-200">6–20 РК</span><span class="font-bold">240 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-1 text-[11px]" style="border-bottom:1px solid #f1f3f5"><span class="text-ink-200">21–50 РК</span><span class="font-bold">190 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-1 text-[11px]" style="border-bottom:1px solid #f1f3f5"><span class="text-ink-200">51–100 РК</span><span class="font-bold">150 ₽/РК</span></div>
+                <div class="flex items-center justify-between py-1 text-[11px]"><span class="text-ink-200">100+ РК</span><span class="font-bold">15 990 ₽/мес</span></div>
               </div>
             </div>
           </div>
-          <div class="app-card p-5 lg:sticky lg:top-4">
-            <div class="text-[13px] font-bold mb-3">К оплате</div>
-            <div class="space-y-2 text-[13px]">
-              <div class="flex justify-between"><span style="color:#a9a6b8">Подключённых РК</span><span class="font-bold">0</span></div>
-              <div class="flex justify-between"><span style="color:#a9a6b8">Срок</span><span class="font-bold">1 мес</span></div>
+          <div class="mm-card p-4 lg:sticky lg:top-20">
+            <div class="text-[12px] font-bold mb-3">К оплате</div>
+            <div class="space-y-1.5 text-[12px]">
+              <div class="flex justify-between"><span class="text-ink-200">Подключённых РК</span><span class="font-bold" id="subRc">0</span></div>
+              <div class="flex justify-between"><span class="text-ink-200">Срок</span><span class="font-bold" id="subPer">1 мес</span></div>
             </div>
-            <div style="border-top:1px solid #eae8f2" class="mt-3 pt-3">
-              <div class="flex items-end justify-between gap-3">
-                <span class="text-[14px] font-medium" style="color:#a9a6b8">Итого</span>
+            <div class="mt-3 pt-3" style="border-top:1px solid #e9edf6">
+              <div class="flex items-end justify-between gap-3 mb-3">
+                <span class="text-[12px] text-ink-200">Итого</span>
                 <div class="text-right">
-                  <div class="text-[28px] leading-none font-extrabold tracking-tight" style="color:#9333ea;font-family:'Space Grotesk',sans-serif">0 ₽</div>
-                  <div class="text-[12px] mt-1" style="color:#a9a6b8">/мес</div>
+                  <div class="text-[24px] leading-none font-extrabold tracking-tight font-display" style="color:#4c6ef5" id="subTotal">0 ₽</div>
+                  <div class="text-[10px] mt-1 text-ink-200">/мес</div>
                 </div>
               </div>
-              <button class="btn-primary w-full mt-4 text-[14px] font-bold py-3 rounded-xl flex items-center justify-center gap-2"><i class="ti ti-qrcode text-[18px]"></i>Оплатить</button>
+              <div class="flex gap-2 mb-3">
+                <input type="text" placeholder="Промокод?" class="flex-1 !text-[12px] !py-2 !px-3">
+                <button class="btn btn-ghost btn-sm text-[11px]">Применить</button>
+              </div>
+              <button class="btn btn-primary w-full text-[13px] py-2.5"><i class="ti ti-qrcode text-[16px]"></i>Оплатить по СБП</button>
+              <button class="btn btn-ghost w-full mt-2 text-[12px] py-2">Другие способы</button>
             </div>
           </div>
         </div>
       </section>
 
+      <!-- ПОДКЛЮЧИТЬ -->
       <section id="connect" class="screen">
-        <div class="max-w-[640px] mx-auto pt-4">
+        <div class="max-w-[560px] mx-auto pt-4">
           <div class="text-center mb-6">
-            <div class="w-14 h-14 rounded-2xl text-3xl flex items-center justify-center mx-auto mb-3" style="background:linear-gradient(135deg,#f3e8ff,#e9d5ff);color:#9333ea"><i class="ti ti-plug-connected"></i></div>
+            <div class="w-14 h-14 rounded-2xl bg-mm-orangeBg text-mm-orange text-3xl flex items-center justify-center mx-auto mb-3 mm-float"><i class="ti ti-plug-connected"></i></div>
             <h1 class="text-2xl font-extrabold">Подключите кабинет WB</h1>
-            <p class="text-[14px] mt-1" style="color:#8682a0">Вставьте API-ключ Wildberries для подключения</p>
+            <p class="text-[13px] mt-1 text-ink-300">Вставьте <strong>API-ключ Wildberries</strong> или <strong>код менеджера</strong></p>
           </div>
-          <div class="app-card p-6">
-            <div class="text-[13px] font-bold mb-1">API-ключ Wildberries <span style="color:#a9a6b8" class="font-normal">· Настройки → Доступ к API</span></div>
-            <div class="flex gap-2 mt-1">
-              <input class="flex-1 rounded-xl px-3 py-2.5 text-[14px] font-mono focus:outline-none transition-all" style="border:1px solid #eae8f2" onfocus="this.style.boxShadow='0 0 0 2px rgba(147,51,234,.2)';this.style.borderColor='#d8b4fe'" onblur="this.style.boxShadow='';this.style.borderColor='#eae8f2'" placeholder="Вставьте API-ключ">
-              <button class="btn-primary text-[14px] font-bold px-5 py-2.5 rounded-xl">Подключить</button>
+          <div class="mm-card p-5">
+            <label class="text-[12px] font-medium">API-ключ или код менеджера <span class="text-ink-200 font-normal">· «Настройки → Доступ к API»</span></label>
+            <div class="flex gap-2 mt-2">
+              <input type="text" id="connectKey" placeholder="Вставьте ключ или код" class="flex-1 font-mono !text-[12px]">
+              <button onclick="connectCab()" class="btn btn-primary btn-sm whitespace-nowrap">Подключить</button>
             </div>
-            <div class="text-[12px] mt-2 flex items-center gap-1.5" style="color:#a9a6b8"><i class="ti ti-shield-lock"></i>Ключ хранится в зашифрованном виде</div>
-            <button class="inline-flex items-center gap-1.5 text-[12px] font-bold mt-3 transition-colors" style="color:#9333ea" onmouseover="this.style.color='#7e22ce'" onmouseout="this.style.color='#9333ea'"><i class="ti ti-book"></i>Как создать API-ключ</button>
+            <p class="text-[10px] mt-2 text-ink-200 flex items-center gap-1"><i class="ti ti-shield-lock"></i>Ключ зашифрован. Бюджет списывается только в WB.</p>
+            <button onclick="openModal('howTo')" class="inline-flex items-center gap-1 text-[11px] font-bold mt-2 text-brand-600 hover:text-brand-700 transition-colors"><i class="ti ti-book"></i>Как создать API-ключ</button>
           </div>
         </div>
       </section>
 
+      <!-- КАБИНЕТЫ -->
       <section id="cabinets" class="screen">
         <div class="flex items-center justify-between mb-5">
-          <div><h1 class="text-2xl font-extrabold">Кабинеты</h1><p class="text-[14px] mt-0.5" style="color:#8682a0">Подключённые кабинеты WB</p></div>
-          <button onclick="go('connect')" class="btn-primary px-5 py-2.5 rounded-xl text-[14px] font-bold flex items-center gap-1.5 whitespace-nowrap"><i class="ti ti-plus"></i>Подключить</button>
+          <div><h1 class="text-2xl font-extrabold">Кабинеты</h1><p class="text-[12px] mt-0.5 text-ink-300">Управление кабинетами WB</p></div>
+          <button onclick="go('connect')" class="btn btn-accent btn-sm"><i class="ti ti-plus"></i>Подключить</button>
         </div>
-        <div class="app-card p-8 text-center" style="color:#cfcce0"><i class="ti ti-building-store text-5xl mb-3 block" style="color:#d8b4fe"></i><span class="text-[14px] font-semibold">Нет подключённых кабинетов</span></div>
+        <div class="mm-card p-8 text-center text-ink-200"><i class="ti ti-building-store text-5xl mb-3 block text-brand-200"></i><span class="text-[13px] font-semibold">Нет подключённых кабинетов</span></div>
+      </section>
+
+      <!-- РЕФЕРАЛКА -->
+      <section id="referral" class="screen">
+        <div class="max-w-[560px] mx-auto">
+          <h1 class="text-2xl font-extrabold mb-1">Реферальная программа</h1>
+          <p class="text-[12px] mb-5 text-ink-300">Приглашайте друзей — зарабатывайте бонусы</p>
+          <div class="mm-card p-5 mb-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[13px] font-bold">Кошелёк</span>
+              <span class="font-display text-xl font-bold" style="color:#4c6ef5">0 ₽</span>
+            </div>
+            <div class="bg-brand-50 dark:bg-brand-900/20 rounded-xl p-3">
+              <div class="text-[11px] font-bold text-brand-700 mb-1">Ваша реферальная ссылка</div>
+              <div class="flex gap-2">
+                <input type="text" readonly value="https://bidrr.ru/?ref=abc123" class="flex-1 !text-[11px] bg-white dark:bg-ink-600">
+                <button class="btn btn-accent btn-sm !px-3"><i class="ti ti-copy"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="mm-card p-5">
+            <h3 class="font-bold text-[13px] mb-3">Как это работает</h3>
+            <div class="space-y-3">
+              <div class="flex gap-3"><div class="w-7 h-7 rounded-full bg-mm-orangeBg text-mm-orange flex items-center justify-center text-xs font-bold shrink-0">1</div><div class="text-[12px]"><span class="font-semibold">Поделитесь ссылкой</span><br><span class="text-ink-300">Отправьте другу</span></div></div>
+              <div class="flex gap-3"><div class="w-7 h-7 rounded-full bg-mm-purpleBg text-mm-purple flex items-center justify-center text-xs font-bold shrink-0">2</div><div class="text-[12px]"><span class="font-semibold">Друг регистрируется</span><br><span class="text-ink-300">По вашей ссылке</span></div></div>
+              <div class="flex gap-3"><div class="w-7 h-7 rounded-full bg-mm-greenLight text-mm-greenDark flex items-center justify-center text-xs font-bold shrink-0">3</div><div class="text-[12px]"><span class="font-semibold">Бонус на кошелёк</span><br><span class="text-ink-300">Для оплаты подписки</span></div></div>
+            </div>
+          </div>
+        </div>
       </section>
 
     </div>
   </main>
 
-  <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 grid grid-cols-5" style="background:white;border-top:1px solid #eae8f2">
+  <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 grid grid-cols-5 bg-white dark:bg-ink-600 border-t border-surface-200 dark:border-ink-400">
     <a onclick="go('dashboard')" id="mnav-dashboard" class="mnav active"><i class="ti ti-layout-dashboard text-xl"></i><span>Обзор</span></a>
     <a onclick="go('campaigns')" id="mnav-campaigns" class="mnav"><i class="ti ti-rocket text-xl"></i><span>РК</span></a>
     <a onclick="go('intervals')" id="mnav-intervals" class="mnav"><i class="ti ti-clock-hour-4 text-xl"></i><span>Интервалы</span></a>
     <a onclick="go('subscription')" id="mnav-subscription" class="mnav"><i class="ti ti-crown text-xl"></i><span>Подписка</span></a>
     <a onclick="go('cabinets')" id="mnav-cabinets" class="mnav"><i class="ti ti-building-store text-xl"></i><span>Кабинеты</span></a>
   </nav>
-
 </div>
 </div>
 
 <script>
-let darkMode = localStorage.getItem('darkMode') === 'true';
-if (darkMode) { document.documentElement.classList.add('dark'); document.body.classList.add('dark'); }
+let D=localStorage.getItem('darkMode')==='true';
+if(D){document.documentElement.classList.add('dark');document.body.classList.add('dark')}
+function toggleTheme(){D=!D;localStorage.setItem('darkMode',D);document.documentElement.classList.toggle('dark',D);document.body.classList.toggle('dark',D);const k=document.querySelector('.toggle-knob');if(k){k.parentElement.classList.toggle('on',D);const i=k.querySelector('i');if(D){i.className='ti ti-sun text-[9px]';i.style.color='#eab308'}else{i.className='ti ti-moon text-[9px]';i.style.color='#4c6ef5'}}}
+document.querySelector('.toggle')?.classList.toggle('on',D);
 
-function toggleTheme() {
-  darkMode = !darkMode;
-  localStorage.setItem('darkMode', darkMode);
-  document.documentElement.classList.toggle('dark', darkMode);
-  document.body.classList.toggle('dark', darkMode);
-  const btn = document.getElementById('themeToggle');
-  const knob = btn.querySelector('.toggle-knob');
-  const icon = knob.querySelector('i');
-  if (darkMode) {
-    btn.classList.remove('light-mode');
-    knob.querySelector('i').className = 'ti ti-sun text-[10px]';
-    knob.querySelector('i').style.color = '#eab308';
-  } else {
-    btn.classList.add('light-mode');
-    knob.querySelector('i').className = 'ti ti-moon text-[10px]';
-    knob.querySelector('i').style.color = '#9333ea';
-  }
+const P=['dashboard','campaigns','intervals','subscription','connect','cabinets','referral'];
+const T={dashboard:'Обзор',campaigns:'Кампании',intervals:'Интервалы',subscription:'Подписка',connect:'Подключить кабинет',cabinets:'Кабинеты',referral:'Реферальная программа'};
+function go(p){P.forEach(x=>{const e=document.getElementById(x);if(e)e.classList.toggle('active',x===p);const n=document.getElementById('nav-'+x);if(n)n.classList.toggle('active',x===p);const m=document.getElementById('mnav-'+x);if(m)m.classList.toggle('active',x===p)});document.getElementById('crumb').textContent=T[p]||p;window.scrollTo(0,0)}
+
+document.addEventListener('click',e=>{const c=e.target.closest('.chip');if(c&&c.parentElement&&!c.closest('.kpi')&&!c.closest('.mm-card')){c.parentElement.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active')}});
+function selCab(c){c.parentElement.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active')}
+
+let curP=7;
+function toggleDD(){document.getElementById('periodMenu').classList.toggle('open')}
+function setPeriod(d){curP=d;document.getElementById('periodLbl').textContent='Период '+d+' дней';document.querySelectorAll('#periodMenu button').forEach(b=>b.classList.toggle('active',b.textContent.includes(d)));document.getElementById('periodMenu').classList.remove('open')}
+document.addEventListener('click',e=>{if(!e.target.closest('#periodDD'))document.getElementById('periodMenu')?.classList.remove('open')});
+
+const data=[
+  {n:'Пила аккумуляторная',s:'AVTO 390717589 · Единая ставка · ИП Трушина',st:'active',sp:62917.84,sh:34.3,sw:108206,cl:3636,ctr:3.4,cpc:17.3,cpm:581.46,bk:583,crc:16.0,or:123,crb:21.1,cpo:511.53,rev:298279,ac:2425.03,drr:21.1,roas:4.74,pr:235361,ps:22.8},
+  {n:'Пила КЛИК',s:'390717589 · Ручная ставка · ИП Трушина',st:'active',sp:53480.12,sh:29.1,sw:18082,cl:2530,ctr:14.0,cpc:21.14,cpm:2957.64,bk:619,crc:24.5,or:194,crb:31.3,cpo:275.67,rev:483865,ac:2494.15,drr:11.1,roas:9.05,pr:430385,ps:36.9},
+  {n:'КЛИК - Аккумулятор',s:'449417390 · Ручная · ИП Трушина',st:'active',sp:13357.5,sh:7.3,sw:9418,cl:2055,ctr:21.8,cpc:6.5,cpm:1418.29,bk:289,crc:14.1,or:82,crb:28.4,cpo:162.9,rev:99193,ac:1209.67,drr:13.5,roas:7.43,pr:85836,ps:7.6},
+  {n:'850615174 - ШУРУПОВЕРТ АВТО',s:'34844362 · Единая · ИП Трушина',st:'active',sp:10412.49,sh:5.7,sw:27605,cl:782,ctr:2.8,cpc:13.32,cpm:377.2,bk:106,crc:13.6,or:20,crb:18.9,cpo:520.62,rev:58840,ac:2942,drr:17.7,roas:5.65,pr:48428,ps:4.5},
+  {n:'Акб2шт Поиск',s:'36978535 · Ручная · ООО "ОНТРЕЙД"',st:'active',sp:8369.26,sh:4.6,sw:19423,cl:2102,ctr:10.8,cpc:3.98,cpm:430.89,bk:327,crc:15.6,or:82,crb:25.1,cpo:102.06,rev:168113,ac:2050.16,drr:5.0,roas:20.09,pr:159744,ps:12.8},
+  {n:'АУКЦ - МИКРО 1шт',s:'933420871 · Ручная · ИП Трушина',st:'paused',sp:5870.75,sh:3.2,sw:4679,cl:178,ctr:3.8,cpc:32.98,cpm:1254.7,bk:52,crc:29.2,or:11,crb:21.2,cpo:533.7,rev:22935,ac:2085,drr:25.6,roas:3.91,pr:17064,ps:1.8},
+  {n:'КЛИК - ШУРУПОВЕРТ',s:'36953286 · Ручная · ИП Трушина',st:'paused',sp:5209.68,sh:2.8,sw:2726,cl:110,ctr:4.0,cpc:47.36,cpm:1911.11,bk:19,crc:17.3,or:4,crb:21.1,cpo:1302.42,rev:11889,ac:2972.25,drr:43.8,roas:2.28,pr:6679,ps:0.9},
+  {n:'КЛИК - МИКРО 1шт АИФ',s:'933439885 · Ручная · ИП Трушина',st:'active',sp:4188,sh:2.3,sw:4563,cl:135,ctr:3.0,cpc:31.02,cpm:917.82,bk:37,crc:27.4,or:7,crb:18.9,cpo:598.29,rev:14595,ac:2085,drr:28.7,roas:3.48,pr:10407,ps:1.1},
+  {n:'КЛИК - МИКРО 2ШТ',s:'933364829 · Ручная · ИП Трушина',st:'active',sp:3375,sh:1.8,sw:6846,cl:75,ctr:1.1,cpc:45,cpm:492.99,bk:16,crc:21.3,or:2,crb:12.5,cpo:1687.5,rev:5084,ac:2542,drr:66.4,roas:1.51,pr:1709,ps:0.4}
+];
+
+const F=n=>n.toLocaleString('ru-RU');
+const FP=n=>n.toFixed(1).replace('.',',')+'%';
+
+function renderDash(){
+  document.getElementById('dashBody').innerHTML=data.map(d=>`<tr>
+    <td class="td-name"><div class="font-semibold text-[12px]">${d.n}</div><div class="td-sub">${d.s}</div></td>
+    <td class="text-right font-bold">${F(d.sp)} ₽</td>
+    <td><div class="flex items-center gap-2"><div class="flex-1 h-1.5 rounded-full bg-surface-100 dark:bg-ink-500/20 overflow-hidden max-w-[60px]"><div class="h-full rounded-full" style="width:${d.sh}%;background:linear-gradient(90deg,#4c6ef5,#748ffc)"></div></div><span class="text-[10px] text-ink-300">${FP(d.sh)}</span></div></td>
+    <td>${F(d.sw)}</td><td>${F(d.cl)}</td><td>${FP(d.ctr)}</td><td>${d.cpc} ₽</td><td>${F(d.cpm)} ₽</td>
+    <td>${F(d.bk)}</td><td>${FP(d.crc)}</td><td>${F(d.or)}</td><td>${FP(d.crb)}</td><td>${d.cpo} ₽</td>
+    <td>${F(d.rev)} ₽</td><td>${F(d.ac)} ₽</td>
+    <td style="color:${d.drr<=15?'#16a34a':d.drr<=25?'#ca8a04':'#dc2626'}" class="font-bold">${FP(d.drr)}</td>
+    <td>${d.roas.toFixed(2)}</td>
+    <td class="${d.pr>=0?'td-pos':'td-neg'}">${d.pr>=0?'+':''}${F(d.pr)} ₽</td>
+    <td>${FP(d.ps)}</td>
+  </tr>`).join('');
 }
 
-const pages = ['dashboard','campaigns','intervals','subscription','connect','cabinets'];
-const titles = { dashboard:'Обзор', campaigns:'Кампании', intervals:'Интервалы', subscription:'Подписка', connect:'Подключить кабинет', cabinets:'Кабинеты' };
+function switchTab(b){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
+function filterC(c){c.parentElement.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active')}
 
-function go(page) {
-  pages.forEach(p => {
-    const el = document.getElementById(p);
-    if (el) el.classList.toggle('active', p === page);
-    const nav = document.getElementById('nav-'+p);
-    if (nav) nav.classList.toggle('active', p === page);
-    const mnav = document.getElementById('mnav-'+p);
-    if (mnav) mnav.classList.toggle('active', p === page);
-  });
-  document.getElementById('crumb').textContent = titles[page] || page;
-  window.scrollTo(0,0);
+function toggleAll(cb){document.querySelectorAll('#campBody input[type=checkbox]').forEach(c=>c.checked=cb.checked);updSel()}
+function updSel(){const c=document.querySelectorAll('#campBody input[type=checkbox]:checked').length;const e=document.getElementById('selCnt'),b=document.getElementById('campAct');if(e)e.textContent=c;if(b){b.classList.toggle('hidden',c===0);b.classList.toggle('flex',c>0)}}
+
+function massAct(a){const c=document.querySelectorAll('#campBody input[type=checkbox]:checked').length;if(!c)return;const m=a==='pause'?'Пауза':'Запуск';showModal(`<div class="p-5"><h3 class="text-lg font-bold mb-2">${m} ${c} кампаний?</h3><p class="text-[12px] text-ink-300 mb-5">Применить ко всем выделенным?</p><div class="flex gap-2 justify-end"><button onclick="closeModal()" class="btn btn-ghost btn-sm">Отмена</button><button onclick="closeModal()" class="btn btn-primary btn-sm">${m}</button></div></div>`);}
+
+function calcPrice(){const v=parseInt(document.getElementById('subSlider').value);document.getElementById('subRc').textContent=v>150?'150+':v;let p=0;if(v===1)p=0;else if(v<=5)p=v*290;else if(v<=20)p=v*240;else if(v<=50)p=v*190;else if(v<=100)p=v*150;else p=15990;document.getElementById('subTotal').textContent=F(p)+' ₽'}
+function selPer(b,m){document.querySelectorAll('#perBtns button').forEach(x=>{x.className='rounded-full px-3 py-2.5 text-center font-bold text-[12px] border border-surface-200 dark:border-ink-400 hover:border-brand-300 transition-all'});b.className='rounded-full px-3 py-2.5 text-center font-bold text-[12px] border-2 border-brand-600 bg-brand-50 text-brand-700';document.getElementById('subPer').textContent=m+' мес';calcPrice()}
+
+function connectCab(){const k=document.getElementById('connectKey')?.value.trim();if(!k)return;showModal(`<div class="p-6 text-center"><div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 text-3xl flex items-center justify-center mx-auto mb-3"><i class="ti ti-loader-2 animate-spin"></i></div><h3 class="text-lg font-bold mb-2">Подключение…</h3><p class="text-[12px] text-ink-300">Проверяем ключ и загружаем кампании</p></div>`);}
+
+function toggleFS(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen()}
+
+function showModal(h){document.getElementById('modalBox').innerHTML=h;document.getElementById('modalBg').classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+function openModal(t){
+  const m={
+    updateKey:`<div class="p-5"><h3 class="text-lg font-bold mb-3">Обновить API-ключ</h3><label class="text-[12px] font-medium">Новый ключ</label><input type="text" placeholder="Вставьте новый API-ключ" class="mt-1 font-mono !text-[12px]"><div class="flex gap-2 justify-end mt-4"><button onclick="closeModal()" class="btn btn-ghost btn-sm">Отмена</button><button onclick="closeModal()" class="btn btn-primary btn-sm">Обновить</button></div></div>`,
+    customPeriod:`<div class="p-5"><h3 class="text-lg font-bold mb-4">Свой период</h3><div class="grid grid-cols-2 gap-3"><div><label class="text-[12px] font-medium">С</label><input type="date" class="mt-1"></div><div><label class="text-[12px] font-medium">По</label><input type="date" class="mt-1"></div></div><div class="flex gap-2 justify-end mt-4"><button onclick="closeModal()" class="btn btn-ghost btn-sm">Отмена</button><button onclick="closeModal()" class="btn btn-primary btn-sm">Применить</button></div></div>`,
+    cols:`<div class="p-5"><h3 class="text-lg font-bold mb-4">Колонки</h3><div class="space-y-1 max-h-[350px] overflow-y-auto">${['Кампания','Расход','Доля расхода','Показы','Клики','CTR','CPC','CPM','Корзины','CR→корз','Заказы','CR→зак','СРО','Выручка','Ср.чек','ДРР','ROAS','Прибыль','Доля выр.'].map(c=>`<label class="flex items-center gap-2 p-2 rounded-xl hover:bg-surface-50 dark:hover:bg-ink-500/10 cursor-pointer transition-colors text-[12px]"><input type="checkbox" checked class="accent-brand-600 rounded"><span>${c}</span></label>`).join('')}</div><div class="flex gap-2 justify-end mt-4"><button onclick="closeModal()" class="btn btn-ghost btn-sm">Сбросить</button><button onclick="closeModal()" class="btn btn-primary btn-sm">Сохранить</button></div></div>`,
+    excel:`<div class="p-5"><h3 class="text-lg font-bold mb-4">Скачать отчёт</h3><div class="space-y-3"><div><label class="text-[12px] font-medium">Кабинет</label><select class="mt-1"><option>Все кабинеты</option></select></div><div><label class="text-[12px] font-medium">Период</label><select class="mt-1"><option>7 дней</option><option>14 дней</option><option>30 дней</option></select></div></div><div class="flex gap-2 justify-end mt-4"><button onclick="closeModal()" class="btn btn-ghost btn-sm">Отмена</button><button onclick="closeModal()" class="btn btn-primary btn-sm"><i class="ti ti-download"></i>Скачать</button></div></div>`,
+    createInterval:`<div class="p-5"><h3 class="text-lg font-bold mb-4">Создать интервал</h3><div class="space-y-3"><div><label class="text-[12px] font-medium">Кампания</label><select class="mt-1"><option>Выберите</option></select></div><div><label class="text-[12px] font-medium">Тип</label><div class="flex gap-2 mt-1.5" id="intBtns"><button onclick="selInt(this)" class="flex-1 rounded-full px-3 py-2 text-[12px] font-bold border-2 border-brand-600 bg-brand-50 text-brand-700">Обычный</button><button onclick="selInt(this)" class="flex-1 rounded-full px-3 py-2 text-[12px] font-bold border border-surface-200 hover:border-brand-300 transition-all">📊 Макс. просмотров</button></div></div><div><label class="text-[12px] font-medium">Дни</label><div class="flex gap-1 mt-1.5">${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map((d,i)=>`<button onclick="this.classList.toggle('day-active')" class="w-7 h-7 rounded-full text-[10px] font-bold border border-surface-200 hover:border-brand-300 transition-all${i<5?' day-active':''}">${d}</button>`).join('')}</div></div><div class="grid grid-cols-2 gap-3"><div><label class="text-[12px] font-medium">Начало</label><input type="time" class="mt-1"></div><div><label class="text-[12px] font-medium">Конец</label><input type="time" class="mt-1"></div></div><div><label class="text-[12px] font-medium">Бюджет, ₽</label><input type="number" placeholder="Без бюджета" class="mt-1"></div></div><div class="flex gap-2 justify-end mt-4"><button onclick="closeModal()" class="btn btn-ghost btn-sm">Отмена</button><button onclick="closeModal()" class="btn btn-accent btn-sm">Сохранить</button></div></div>`,
+    howTo:`<div class="p-5"><h3 class="text-lg font-bold mb-4">Как подключить</h3><div class="space-y-3 text-[12px]">${[['Зайдите в <a href="https://seller.wildberries.ru" target="_blank" class="text-brand-600 font-semibold hover:underline">seller.wildberries.ru</a>'],['Откройте <strong>«Настройки → Доступ к API»</strong>'],['Нажмите <strong>«Создать токен»</strong>'],['В поиске введите <strong>«bidRR»</strong>'],['Нажмите <strong>«Скопировать и завершить»</strong>'],['Вставьте токен и нажмите <strong>«Подключить»</strong>']].map(([t],i)=>`<div class="flex gap-2"><div class="w-6 h-6 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-[10px] font-bold shrink-0">${i+1}</div><div>${t}</div></div>`).join('')}</div><div class="bg-brand-50 dark:bg-brand-900/20 rounded-xl p-3 mt-3 text-[11px] text-brand-700 flex items-start gap-2"><i class="ti ti-info-circle text-lg mt-0.5 shrink-0"></i><span>Ключ зашифрован. Бюджет списывается только в WB.</span></div><button onclick="closeModal()" class="btn btn-primary w-full mt-3 py-2.5 text-[13px]">Понятно</button></div>`
+  };
+  if(m[t])showModal(m[t]);
 }
 
-document.querySelectorAll('.chip').forEach(chip => {
-  chip.addEventListener('click', function() {
-    this.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    this.classList.add('active');
-  });
-});
+function selInt(b){document.querySelectorAll('#intBtns button').forEach(x=>{x.className='flex-1 rounded-full px-3 py-2 text-[12px] font-bold border border-surface-200 hover:border-brand-300 transition-all'});b.className='flex-1 rounded-full px-3 py-2 text-[12px] font-bold border-2 border-brand-600 bg-brand-50 text-brand-700'}
+
+function showOnboarding(){document.getElementById('onboardingModal').classList.add('open');document.body.style.overflow='hidden'}
+function obNext(s){document.querySelectorAll('.ob-step').forEach(x=>x.classList.remove('active'));document.getElementById('ob'+s).classList.add('active');document.getElementById('obProg').style.width=(s*33)+'%'}
+function obSkip(){obNext(3)}
+function obFinish(){localStorage.setItem('bidrr_onboarded','1');document.getElementById('onboardingModal').classList.remove('open');document.body.style.overflow=''}
+
+renderDash();
 </script>
-
 </body>
 </html>
